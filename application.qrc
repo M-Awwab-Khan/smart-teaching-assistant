@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/smart-teaching-assistant">
+        <file>welcome-withoutbg.png</file>
+    </qresource>
+</RCC>
