@@ -11,6 +11,9 @@ Window {
     visible: true
     title: qsTr("Smart Teaching Assistant")
 
+    minimumHeight: 430
+    minimumWidth: 750
+
     Material.theme: Material.Light // or Material.Light
     Material.primary: Material.Blue
     Material.accent: Material.Pink
