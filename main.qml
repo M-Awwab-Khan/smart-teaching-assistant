@@ -19,28 +19,31 @@ Window {
     Material.accent: Material.Pink
 
     RowLayout {
-        width : parent.width * 0.8
-        height: parent.height * 0.6
+        id: rowLayout
+        width : root.width * 0.8
+        height: root.height * 0.6
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
 
 
         Image {
             source: "welcome-withoutbg.png"
-            Layout.maximumWidth: parent.width
-            Layout.maximumHeight: parent.height
-            Layout.minimumHeight: parent.height * 0.4
-            Layout.minimumWidth: parent.width * 0.4
+            Layout.maximumWidth: rowLayout.width * 0.9
+            Layout.maximumHeight: rowLayout.height * 0.9
+            Layout.minimumHeight: rowLayout.height * 0.5
+            Layout.minimumWidth: rowLayout.width * 0.5
             fillMode: Image.PreserveAspectFit
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
         }
 
         ColumnLayout {
             spacing: 20
-            width: parent.width * 0.4
+            width: rowLayout.width * 0.6
+
             Text {
                 text: "Welcome to Smart Teaching Assistant"
                 font.pixelSize: 24
+                Layout.fillWidth: true
                 Layout.maximumWidth: parent.width * 0.9
                 wrapMode: Text.WordWrap
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
@@ -49,6 +52,7 @@ Window {
             Text {
                 text: qsTr("Grade your students' tests using OMR and use Virtual Whiteboard to conduct live sessions.")
                 font.pixelSize: 16
+                Layout.fillWidth: true
                 Layout.maximumWidth: parent.width
                 wrapMode: Text.WordWrap
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
