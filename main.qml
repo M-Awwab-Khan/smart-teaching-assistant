@@ -5,6 +5,7 @@ import QtQuick.Controls.Material
 
 
 Window {
+    id: root
     width: 1100
     height: 600
     visible: true
@@ -15,22 +16,25 @@ Window {
     Material.accent: Material.Pink
 
     RowLayout {
-        spacing: 10
         width : parent.width * 0.8
         height: parent.height * 0.6
-        anchors.centerIn: parent
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+
 
         Image {
             source: "welcome-withoutbg.png"
-            Layout.preferredWidth: parent.width * 0.6
-            Layout.preferredHeight: parent.height * 0.6
+            Layout.maximumWidth: parent.width
+            Layout.maximumHeight: parent.height
+            Layout.minimumHeight: parent.height * 0.4
+            Layout.minimumWidth: parent.width * 0.4
             fillMode: Image.PreserveAspectFit
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
         }
 
         ColumnLayout {
             spacing: 20
-            width: parent.width * 0.5
+            width: parent.width * 0.4
             Text {
                 text: "Welcome to Smart Teaching Assistant"
                 font.pixelSize: 24
