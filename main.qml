@@ -18,63 +18,76 @@ Window {
     Material.primary: Material.Blue
     Material.accent: Material.Pink
 
-    RowLayout {
-        id: rowLayout
-        width : root.width * 0.8
-        height: root.height * 0.6
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
+    Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+
+        RowLayout {
+            id: rowLayout
+            anchors.fill: parent
+            anchors.margins: 20
 
 
-        Image {
-            source: "welcome-withoutbg.png"
-            Layout.maximumWidth: rowLayout.width * 0.9
-            Layout.maximumHeight: rowLayout.height * 0.9
-            Layout.minimumHeight: rowLayout.height * 0.5
-            Layout.minimumWidth: rowLayout.width * 0.5
-            fillMode: Image.PreserveAspectFit
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-        }
+            // Left Side (Image Content)
+            Rectangle {
+                Layout.fillHeight: true
+                Layout.preferredWidth: parent.width / 2
+                color: "transparent"
 
-        ColumnLayout {
-            spacing: 20
-            width: rowLayout.width * 0.6
-
-            Text {
-                text: "Welcome to Smart Teaching Assistant"
-                font.pixelSize: 24
-                Layout.fillWidth: true
-                Layout.maximumWidth: parent.width * 0.9
-                wrapMode: Text.WordWrap
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-            }
-
-            Text {
-                text: qsTr("Grade your students' tests using OMR and use Virtual Whiteboard to conduct live sessions.")
-                font.pixelSize: 16
-                Layout.fillWidth: true
-                Layout.maximumWidth: parent.width
-                wrapMode: Text.WordWrap
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-            }
-
-            Button {
-                text: "Get Started"
-                width: 150
-                height: 40
-                Material.background: "#6C63FF"
-
-                contentItem: Text {
-                    text: qsTr("Get Started")
-                    color: "white"
-                    font.pixelSize: 16
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+                Image {
+                    id: illustration
+                    anchors.centerIn: parent
+                    source: "welcome_illustration.svg" // Provide the path to your image
+                    fillMode: Image.PreserveAspectFit
+                    width: parent.width * 0.4
+                    height: parent.height * 0.8
                 }
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+            }
+
+
+            ColumnLayout {
+                Layout.fillHeight: true
+                Layout.preferredWidth: parent.width / 2
+                spacing: 20
+
+                Text {
+                    text: "Welcome to Smart Teaching Assistant"
+                    font.pixelSize: 24
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: parent.width
+                    wrapMode: Text.WordWrap
+                    Layout.alignment: Qt.AlignLeft
+                }
+
+                Text {
+                    text: qsTr("Grade your students' tests using OMR and use Virtual Whiteboard to conduct live sessions.")
+                    font.pixelSize: 16
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: parent.width
+                    wrapMode: Text.WordWrap
+                    Layout.alignment: Qt.AlignLeft
+                }
+
+                Button {
+                    text: "Get Started"
+                    width: 150
+                    height: 40
+                    Material.background: "#6C63FF"
+
+                    contentItem: Text {
+                        text: qsTr("Get Started")
+                        color: "white"
+                        font.pixelSize: 16
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+                }
             }
         }
+
     }
+
 
 }
