@@ -30,17 +30,21 @@ Item {
 
                 Button {
                     text: qsTr("<- Back")
-                    background: Rectangle {
-                        color: "transparent"  // Light purple color
-                        radius: 10
+                    Material.background: "#6C63FF"
+                    width: 100
+                    contentItem: Text {
+                        text: qsTr("<- Back")
+                        color: "white"
+                        font.pixelSize: 16
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
                     }
-                    font.pixelSize: 16
-                    font.bold: true
                     onClicked: {
                         stackView.pop()
                     }
                     anchors.left: parent.left
-                    anchors.leftMargin: 20
+                    anchors.leftMargin: 50
                 }
 
 
@@ -52,9 +56,9 @@ Item {
                     height: 50
                     width: 50
                     Image {
-                        source: "https://icons.veryicon.com/png/o/miscellaneous/rookie-official-icon-gallery/225-default-avatar.png"
-                        width: 32
-                        height: 32
+                        source: "https://static-00.iconduck.com/assets.00/avatar-icon-256x256-lc2hm878.png"
+                        width: 28
+                        height: 28
                         fillMode: Image.PreserveAspectFit
                         anchors.centerIn: parent
 
