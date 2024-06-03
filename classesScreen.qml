@@ -116,31 +116,31 @@ Item {
                 Rectangle {
                     width: 200
                     height: 200
-                    color: "#ECEBFF"  // Light purple color
+                    color: "#ECEBFF"
                     radius: 10
-                    border.width: 1
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            // Handle class card click here
                             console.log("Class clicked: " + className)
                         }
                     }
                     Component.onCompleted: console.log(width, height)
                     ColumnLayout {
                         anchors.fill: parent
-                        spacing: 15
+                        spacing: -40
 
                         Text {
                             text: model.className
                             font.pixelSize: 18
                             font.bold: true
+                            Layout.leftMargin: 20
                             color: "#333333"
                         }
 
                         Text {
                             text: model.teacherName
                             font.pixelSize: 14
+                            Layout.leftMargin: 20
                             color: "#666666"
                         }
 
@@ -149,6 +149,7 @@ Item {
                             Text {
                                 text: "👤 " + model.studentCount
                                 font.pixelSize: 14
+                                Layout.leftMargin: 20
                                 color: "#666666"
                             }
                         }
@@ -156,6 +157,7 @@ Item {
                         Text {
                             text: model.centerName
                             font.pixelSize: 14
+                            Layout.leftMargin: 20
                             color: "#666666"
                         }
                     }
@@ -167,7 +169,13 @@ Item {
                 id: classModel
                 ListElement { className: "Class 9"; teacherName: "Chemistry Teacher"; studentCount: 60; centerName: "Practical Center" }
                 ListElement { className: "Class 10"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
-
+                ListElement { className: "Class 11"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
+                ListElement { className: "Class 12"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
+                ListElement { className: "Class -1"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
+                ListElement { className: "Class -2"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
+                ListElement { className: "Class -3"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
+                ListElement { className: "Class -4"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
+                ListElement { className: "Class -5"; teacherName: "Tahir Jamal"; studentCount: 45; centerName: "Science Center" }
             }
 
             // Grid of class cards
@@ -177,11 +185,12 @@ Item {
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
                 GridView {
+                    cellWidth: 250
+                    cellHeight: 250
                     anchors.fill: parent
                     model: classModel
                     delegate: classDelegate
                 }
-
 
             }
 
