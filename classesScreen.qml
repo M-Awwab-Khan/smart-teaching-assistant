@@ -71,7 +71,7 @@ Item {
                 anchors.top: topBar.bottom
                 Layout.preferredWidth: parent.width * 0.9
                 Layout.alignment: Qt.AlignHCenter
-                anchors.margins: 30
+                anchors.topMargin: 40
 
                 RowLayout {
                     width: parent.width
@@ -80,18 +80,15 @@ Item {
 
                     Text {
                         text: qsTr("Classes")
-                        font.pixelSize: 24
+                        font.pixelSize: 30
                         font.bold: true
                         color: "#6C63FE"  // Purple color
                         Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                     }
 
                     Button {
-
-                        background: Rectangle {
-                            color: "#6C63FE"  // Purple color
-                            radius: 10
-                        }
+                        text: "+ Add Class"
+                        Material.background: "#6C63FF"
                         font.pixelSize: 16
                         font.bold: true
                         contentItem: Text {
@@ -114,7 +111,7 @@ Item {
             Component {
                 id: classDelegate
                 Rectangle {
-                    width: 200
+                    width: 250
                     height: 200
                     color: "#ECEBFF"
                     radius: 10
@@ -129,13 +126,26 @@ Item {
                         anchors.fill: parent
                         spacing: -40
 
-                        Text {
-                            text: model.className
-                            font.pixelSize: 18
-                            font.bold: true
-                            Layout.leftMargin: 20
-                            color: "#333333"
+                        RowLayout {
+                            Layout.preferredWidth:  parent.width
+                            Layout.alignment: Qt.AlignTop
+                            Layout.topMargin: 20
+                            Text {
+                                text: model.className
+                                font.pixelSize: 22
+                                font.bold: true
+                                Layout.leftMargin: 20
+                                color: "#333333"
+                            }
+                            Text {
+                                text: "👤 " + model.studentCount
+                                font.pixelSize: 14
+                                Layout.rightMargin: 20
+                                Layout.alignment: Qt.AlignRight
+                                color: "#666666"
+                            }
                         }
+
 
                         Text {
                             text: model.teacherName
@@ -144,15 +154,6 @@ Item {
                             color: "#666666"
                         }
 
-                        RowLayout {
-                            spacing: 10
-                            Text {
-                                text: "👤 " + model.studentCount
-                                font.pixelSize: 14
-                                Layout.leftMargin: 20
-                                color: "#666666"
-                            }
-                        }
 
                         Text {
                             text: model.centerName
@@ -171,11 +172,6 @@ Item {
                 ListElement { className: "Class 10"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
                 ListElement { className: "Class 11"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
                 ListElement { className: "Class 12"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
-                ListElement { className: "Class -1"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
-                ListElement { className: "Class -2"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
-                ListElement { className: "Class -3"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
-                ListElement { className: "Class -4"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
-                ListElement { className: "Class -5"; teacherName: "Tahir Jamal"; studentCount: 45; centerName: "Science Center" }
             }
 
             // Grid of class cards
@@ -183,9 +179,10 @@ Item {
                 Layout.preferredWidth: rootFrame.width * 0.9
                 Layout.preferredHeight: rootFrame.height * 0.8
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+                Layout.topMargin: 10
 
                 GridView {
-                    cellWidth: 250
+                    cellWidth: 270
                     cellHeight: 250
                     anchors.fill: parent
                     model: classModel
