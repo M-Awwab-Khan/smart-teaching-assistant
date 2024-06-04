@@ -13,12 +13,6 @@ import QtQuick.Dialogs
                 standardButtons: Dialog.Ok | Dialog.Cancel
                 modal: true
                 visible: true
-
-
-                onAccepted: console.log("Ok clicked")
-                onRejected: console.log("Cancel clicked")
-
-
         ColumnLayout
         {
             spacing:20

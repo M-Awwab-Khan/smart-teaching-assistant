@@ -17,6 +17,8 @@ Item {
             id:forclass
             visible: false
             anchors.centerIn: parent
+            onAccepted: console.log("Ok clicked")
+            onRejected: console.log("Cancel clicked")
         }
         ColumnLayout {
             anchors.fill: parent
@@ -39,7 +41,7 @@ Item {
                     width: 80
                     height: 40
                     contentItem: Text {
-                        text: qsTr("← Back")
+                        text: qsTr("Back")
                         color: "white"
                         font.pixelSize: 16
                         font.bold: true
