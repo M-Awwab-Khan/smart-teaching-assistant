@@ -13,13 +13,22 @@ Item {
         id: rootFrame
         anchors.fill: parent
         color: "#FFFFFF"
+
+        // The Addclass Dialog Box
         Addclass{
             id:forclass
             visible: false
             anchors.centerIn: parent
-            onAccepted: console.log("Ok clicked")
-            onRejected: console.log("Cancel clicked")
+            onFormSubmitted: function(className, studentCount, teacherName, centerName){
+                        classModel.append({
+                            "className": className,
+                            "teacherName": teacherName,
+                            "studentCount": studentCount,
+                            "centerName": centerName
+                        })
+                    }
         }
+
         ColumnLayout {
             anchors.fill: parent
             spacing: 50
