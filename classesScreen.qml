@@ -8,11 +8,16 @@ Item {
     Material.theme: Material.Light // or Material.Light
     Material.primary: Material.Blue
     Material.accent: Material.Pink
+
     Rectangle {
         id: rootFrame
         anchors.fill: parent
         color: "#FFFFFF"
-
+        Addclass{
+            id:forclass
+            visible: false
+            anchors.centerIn: parent
+        }
         ColumnLayout {
             anchors.fill: parent
             spacing: 50
@@ -69,6 +74,7 @@ Item {
 
             }
 
+
             // Heading bar
             Rectangle {
                 id: headingBar
@@ -90,6 +96,7 @@ Item {
                         Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                     }
 
+
                     Button {
                         text: "+ Add Class"
                         Material.background: "#6C63FF"
@@ -105,10 +112,12 @@ Item {
                         }
                         Layout.alignment: Qt.AlignTop | Qt.AlignRight
                         onClicked: {
-                            // Handle add class action here
+                            forclass.open()
                         }
                     }
+
                 }
+
 
             }
 

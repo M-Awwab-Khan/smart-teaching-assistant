@@ -4,5 +4,6 @@
         <file>welcome_illustration.svg</file>
         <file>welcomeScreen.qml</file>
         <file>classesScreen.qml</file>
+        <file>Addclass.qml</file>
     </qresource>
 </RCC>
