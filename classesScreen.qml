@@ -34,11 +34,12 @@ Item {
                 }
 
                 Button {
-                    text: qsTr("<- Back")
+                    text: qsTr("← Back")
                     Material.background: "#6C63FF"
-                    width: 100
+                    width: 80
+                    height: 40
                     contentItem: Text {
-                        text: qsTr("<- Back")
+                        text: qsTr("← Back")
                         color: "white"
                         font.pixelSize: 16
                         font.bold: true
@@ -50,6 +51,7 @@ Item {
                     }
                     anchors.left: parent.left
                     anchors.leftMargin: 50
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
 
@@ -62,8 +64,8 @@ Item {
                     width: 50
                     Image {
                         source: "https://static-00.iconduck.com/assets.00/avatar-icon-256x256-lc2hm878.png"
-                        width: 28
-                        height: 28
+                        width: 25
+                        height: 25
                         fillMode: Image.PreserveAspectFit
                         anchors.centerIn: parent
 
@@ -197,6 +199,7 @@ Item {
                 GridView {
                     cellWidth: 270
                     cellHeight: 250
+                    clip: true
                     anchors.fill: parent
                     model: classModel
                     delegate: classDelegate
