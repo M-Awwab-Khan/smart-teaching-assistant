@@ -25,9 +25,9 @@ Item {
             visible: false
             anchors.centerIn: parent
             onFormSubmitted: function(className, studentCount, teacherName, centerName){
-                console.log("signal received");
+                        console.log("signal received");
                         var xyz = dbhandler.addClass(className, Number(studentCount), teacherName, centerName);
-                console.log(xyz);
+                        console.log(xyz);
                     }
         }
 
