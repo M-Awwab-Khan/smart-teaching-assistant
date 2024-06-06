@@ -2,12 +2,17 @@ import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Controls
+import DatabaseHandler 1.0
 
 Item {
     id: classesScreen
     Material.theme: Material.Light // or Material.Light
     Material.primary: Material.Blue
     Material.accent: Material.Pink
+
+    DatabaseHandler{
+        id: dbhandler
+    }
 
     Rectangle {
         id: rootFrame
@@ -20,12 +25,9 @@ Item {
             visible: false
             anchors.centerIn: parent
             onFormSubmitted: function(className, studentCount, teacherName, centerName){
-                        classModel.append({
-                            "className": className,
-                            "teacherName": teacherName,
-                            "studentCount": studentCount,
-                            "centerName": centerName
-                        })
+                console.log("signal received");
+                        var xyz = dbhandler.addClass(className, Number(studentCount), teacherName, centerName);
+                console.log(xyz);
                     }
         }
 
