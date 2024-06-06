@@ -2,6 +2,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QVariantList>
+#include <QSqlError>
 
 DatabaseHandler::DatabaseHandler(QObject *parent)
     : QObject{parent}
@@ -9,18 +10,18 @@ DatabaseHandler::DatabaseHandler(QObject *parent)
     db = QSqlDatabase::database();
 }
 
-bool DatabaseHandler::addClass(const QString className, const int studentCount, const QString teacherName, const QString centerName) {
+bool DatabaseHandler::addClass(const QString &className, const int &studentCount, const QString &teacherName, const QString &centerName) {
     QSqlQuery query;
-    query.exec("INSERT INTO classes (className, studentCount, teacherName, centerName) VALUES (:className, :studentCount, :teacherName, :centerName)");
-    query.bindValue(":className", className);
-    query.bindValue(":studentCount", studentCount);
-    query.bindValue(":teacherName", teacherName);
-    query.bindValue(":centerName", centerName);
-    if (query.exec()) {
-        return true;
-    } else{
+    query.exec("INSERT INTO classes (className, studentCount, teacherName, centerName) VALUES (?, ?, ?, ?)");
+    query.addBindValue(className);
+    query.addBindValue(studentCount);
+    query.addBindValue(teacherName);
+    query.addBindValue(centerName);
+    if (!query.exec()) {
+        qWarning() << "Add user failed: " << query.lastError();
         return false;
     }
+    return true;
 
 }
 
