@@ -15,7 +15,7 @@ Item {
         color: "#FFFFFF"
 
         // The Addclass Dialog Box
-        Addclass{
+        Addclass {
             id:forclass
             visible: false
             anchors.centerIn: parent

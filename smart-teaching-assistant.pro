@@ -1,6 +1,7 @@
-QT += quick
+QT += quick sql
 
 SOURCES += \
+        databasehandler.cpp \
         main.cpp
 
 resources.files = main.qml 
@@ -23,3 +24,6 @@ DISTFILES += \
     Addclass.qml \
     classesScreen.qml \
     welcomeScreen.qml
+
+HEADERS += \
+    databasehandler.h
