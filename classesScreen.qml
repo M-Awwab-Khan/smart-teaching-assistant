@@ -14,6 +14,16 @@ Item {
         id: dbhandler
     }
 
+    function loadClasses() {
+        var classes = dbhandler.getClasses();
+        classModel.clear();
+        for (let i = 0; i < classes.length; i++) {
+            classModel.append(classes[i]);
+        }
+    }
+
+    Component.onCompleted: loadClasses()
+
     Rectangle {
         id: rootFrame
         anchors.fill: parent
@@ -25,10 +35,11 @@ Item {
             visible: false
             anchors.centerIn: parent
             onFormSubmitted: function(className, studentCount, teacherName, centerName){
-                        console.log("signal received");
-                        var xyz = dbhandler.addClass(className, Number(studentCount), teacherName, centerName);
-                        console.log(xyz);
-                    }
+                                console.log("signal received");
+                                var response = dbhandler.addClass(className, Number(studentCount), teacherName, centerName);
+                                console.log(response);
+                                loadClasses();
+                            }
         }
 
         ColumnLayout {
@@ -139,16 +150,38 @@ Item {
             Component {
                 id: classDelegate
                 Rectangle {
+                    id: classRect
                     width: 250
                     height: 200
                     color: "#ECEBFF"
                     radius: 10
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            console.log("Class clicked: " + className)
+                    // MouseArea {
+                    //     anchors.fill: parent
+                    //     onClicked: {
+                    //         console.log("Class clicked: " + className)
+                    //     }
+                    // }
+                    RowLayout {
+                        spacing: 10
+                        anchors.centerIn: parent
+
+                        Button {
+                            id: editButton
+                            text: "edit"
+                            onClicked: console.log("edit clicked");
+                            visible: false
+                        }
+
+                        Button {
+                            id: deleteButton
+                            text: "delete"
+                            onClicked: console.log("delete clicked");
+                            visible: false
                         }
                     }
+
+
+
                     Component.onCompleted: console.log(width, height)
                     ColumnLayout {
                         anchors.fill: parent
@@ -189,6 +222,15 @@ Item {
                             Layout.leftMargin: 20
                             color: "#666666"
                         }
+                    }
+                    TapHandler {
+                           id: tapHandler
+                           gesturePolicy: TapHandler.ReleaseWithinBounds
+                           onDoubleTapped: {
+                               console.log("clicked");
+                               editButton.visible = true;
+                               deleteButton.visible = true;
+                           }
                     }
                 }
 

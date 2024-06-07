@@ -3,6 +3,7 @@
 #include <QSqlQuery>
 #include <QVariantList>
 #include <QSqlError>
+#include <QVariantMap>
 
 DatabaseHandler::DatabaseHandler(QObject *parent)
     : QObject{parent}
@@ -26,5 +27,15 @@ bool DatabaseHandler::addClass(const QString &className, const int &studentCount
 }
 
 QVariantList DatabaseHandler::getClasses() {
-    return QVariantList {};
+    QVariantList classes;
+    QSqlQuery query("SELECT * FROM classes");
+    while (query.next()) {
+        QVariantMap class_;
+        class_["className"] = query.value(1).toString();
+        class_["studentCount"] = query.value(2).toInt();
+        class_["teacherName"] = query.value(3).toString();
+        class_["centerName"] = query.value(4).toString();
+        classes.append(class_);
+    }
+    return classes;
 }

@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QVariantList>
+#include <QVariantList> // its like a list
 
 class DatabaseHandler : public QObject
 {
