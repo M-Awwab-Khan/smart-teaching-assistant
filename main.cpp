@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 
     initializeDatabase();
 
+    // to use any custom class in qml, you need to register it
     qmlRegisterType<DatabaseHandler>("DatabaseHandler", 1, 0, "DatabaseHandler");
 
     QQmlApplicationEngine engine;

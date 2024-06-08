@@ -31,6 +31,7 @@ QVariantList DatabaseHandler::getClasses() {
     QSqlQuery query("SELECT * FROM classes");
     while (query.next()) {
         QVariantMap class_;
+        class_["iD"] = query.value(0).toInt();
         class_["className"] = query.value(1).toString();
         class_["studentCount"] = query.value(2).toInt();
         class_["teacherName"] = query.value(3).toString();
@@ -38,4 +39,19 @@ QVariantList DatabaseHandler::getClasses() {
         classes.append(class_);
     }
     return classes;
+}
+
+bool DatabaseHandler::editClass(const int id, const QString &className, const int &studentCount, const QString &teacherName, const QString &centerName) {
+    QSqlQuery query("UPDATE classes SET className = ?, studentCount = ?, teacherName = ?, centerName = ? WHERE id = ?");
+    query.addBindValue(className);
+    query.addBindValue(studentCount);
+    query.addBindValue(teacherName);
+    query.addBindValue(centerName);
+    query.addBindValue(id);
+
+    if (!query.exec()) {
+        qWarning() << "Add user failed: " << query.lastError();
+        return false;
+    }
+    return true;
 }
