@@ -15,7 +15,9 @@ Item {
     }
 
     function loadClasses() {
+        // to get latest classes
         var classes = dbhandler.getClasses();
+
         classModel.clear();
         for (let i = 0; i < classes.length; i++) {
             classModel.append(classes[i]);
@@ -40,6 +42,20 @@ Item {
                                 console.log(response);
                                 loadClasses();
                             }
+        }
+
+        EditClass {
+            id: editclass
+            visible: false
+            anchors.centerIn: parent
+
+            onEditformSubmitted: function(iD, classNamet, studentCountt, teacherNamet, centerNamet) {
+                console.log("edit signal recieved");
+                var response = dbhandler.editClass(iD, classNamet, studentCountt, teacherNamet, centerNamet);
+                console.log(response);
+                loadClasses();
+            }
+
         }
 
         ColumnLayout {
@@ -155,28 +171,52 @@ Item {
                     height: 200
                     color: "#ECEBFF"
                     radius: 10
-                    // MouseArea {
-                    //     anchors.fill: parent
-                    //     onClicked: {
-                    //         console.log("Class clicked: " + className)
-                    //     }
-                    // }
+
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+
+                    }
+
                     RowLayout {
                         spacing: 10
                         anchors.centerIn: parent
 
                         Button {
                             id: editButton
+                            Material.background: "#6C63FF"
                             text: "edit"
-                            onClicked: console.log("edit clicked");
-                            visible: false
+                            // Image {
+                            //     width: 20
+
+                            //     anchors.centerIn: parent
+                            //     source: "https://static.vecteezy.com/system/resources/thumbnails/019/552/595/small/sign-up-icon-signup-square-box-on-transparent-background-free-png.png"
+                            // }
+                            contentItem: Text {
+                                text: "edit"
+                                color: "white"
+                            }
+
+                            onClicked: function() {
+                                editclass.iD = model.iD
+                                editclass.classNamet = model.className
+                                editclass.studentCountt = model.studentCount
+                                editclass.teacherNamet = model.teacherName
+                                editclass.centerNamet = model.centerName
+                                editclass.open()
+                            }
                         }
 
                         Button {
                             id: deleteButton
                             text: "delete"
-                            onClicked: console.log("delete clicked");
-                            visible: false
+                            Material.background: "#6C63FF"
+
+                            contentItem: Text {
+                                text: "delete"
+                                color: "white"
+                            }
+
                         }
                     }
 
@@ -223,25 +263,12 @@ Item {
                             color: "#666666"
                         }
                     }
-                    TapHandler {
-                           id: tapHandler
-                           gesturePolicy: TapHandler.ReleaseWithinBounds
-                           onDoubleTapped: {
-                               console.log("clicked");
-                               editButton.visible = true;
-                               deleteButton.visible = true;
-                           }
-                    }
                 }
 
             }
 
             ListModel {
                 id: classModel
-                ListElement { className: "Class 9"; teacherName: "Chemistry Teacher"; studentCount: 60; centerName: "Practical Center" }
-                ListElement { className: "Class 10"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
-                ListElement { className: "Class 11"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
-                ListElement { className: "Class 12"; teacherName: "Math Teacher"; studentCount: 45; centerName: "Science Center" }
             }
 
             // Grid of class cards
