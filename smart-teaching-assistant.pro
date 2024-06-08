@@ -22,6 +22,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     Addclass.qml \
+    EditClass.qml \
     classesScreen.qml \
     welcomeScreen.qml
 

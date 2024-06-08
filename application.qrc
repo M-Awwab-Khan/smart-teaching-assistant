@@ -5,5 +5,6 @@
         <file>welcomeScreen.qml</file>
         <file>classesScreen.qml</file>
         <file>Addclass.qml</file>
+        <file>EditClass.qml</file>
     </qresource>
 </RCC>
