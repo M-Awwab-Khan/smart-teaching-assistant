@@ -177,13 +177,16 @@ Item {
                         Button {
                             id: editButton
                             Material.background: "#6C63FF"
-                            text: "edit"
-                            contentItem: Text {
-                                text: "edit"
-                                color: "white"
+                            Image {
+                                source: "https://www.iconsdb.com/icons/preview/white/edit-xxl.png"
+                                fillMode: Image.PreserveAspectFit
+                                width: 20
+                                height: 20
+                                anchors.centerIn: parent
                             }
+
                             onClicked: function() {
-                                editclass.id = model.id
+                                editclass.iD = model.id
                                 editclass.classNamet = model.className
                                 editclass.studentCountt = model.studentCount
                                 editclass.teacherNamet = model.teacherName
@@ -194,12 +197,15 @@ Item {
 
                         Button {
                             id: deleteButton
-                            text: "delete"
                             Material.background: "#6C63FF"
-                            contentItem: Text {
-                                text: "delete"
-                                color: "white"
+                            Image {
+                                source: "https://www.iconsdb.com/icons/preview/white/delete-xxl.png"
+                                fillMode: Image.PreserveAspectFit
+                                width: 20
+                                height: 20
+                                anchors.centerIn: parent
                             }
+
                             onClicked: {
                                 deleteDialog.open();
                             }
@@ -209,11 +215,16 @@ Item {
                             id: deleteDialog
                             title: "Confirm Delete"
                             modal: true
+                            height: 150
+                            width: 300
+                            parent: rootFrame
                             standardButtons: Dialog.Ok | Dialog.Cancel
+                            anchors.centerIn: rootFrame
                             contentItem: Text {
                                 text: "Are you sure you want to delete this class?"
                                 width: parent.width
                                 wrapMode: Text.WordWrap
+
                             }
                             onAccepted: {
                                 dbhandler.deleteClass(model.id);
