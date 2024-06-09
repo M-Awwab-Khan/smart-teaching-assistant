@@ -11,6 +11,10 @@ Dialog {
     property string teacherNamet;
     property string centerNamet;
 
+    Material.theme: Material.Light
+    Material.primary: Material.Blue
+    Material.accent: "#6C63FF"
+
     id: dialog
     height: 500
     width: 600

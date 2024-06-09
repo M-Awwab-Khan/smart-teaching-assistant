@@ -8,7 +8,7 @@ Item {
     id: classesScreen
     Material.theme: Material.Light
     Material.primary: Material.Blue
-    Material.accent: Material.Pink
+    Material.accent: "#6C63FF"
 
     DatabaseHandler {
         id: dbhandler
@@ -226,6 +226,11 @@ Item {
                             parent: rootFrame
                             standardButtons: Dialog.Ok | Dialog.Cancel
                             anchors.centerIn: rootFrame
+
+                            Material.theme: Material.Light
+                            Material.primary: Material.Blue
+                            Material.accent: "#6C63FF"
+
                             contentItem: Text {
                                 text: "Are you sure you want to delete this class?"
                                 width: parent.width

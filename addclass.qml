@@ -13,6 +13,10 @@ Dialog {
     modal: true
     signal formSubmitted(string className, int studentCount, string teacherName, string centerName)
 
+    Material.theme: Material.Light
+    Material.primary: Material.Blue
+    Material.accent: "#6C63FF"
+
     function moveFocusDown() {
         if (className.focus) {
             studentCount.forceActiveFocus();

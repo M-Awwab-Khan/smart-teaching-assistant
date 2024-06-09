@@ -6,7 +6,7 @@ import QtQuick.Controls
 Item {
     Material.theme: Material.Light // or Material.Light
     Material.primary: Material.Blue
-    Material.accent: Material.Pink
+    Material.accent: "#6C63FF"
 
     Rectangle {
         anchors.fill: parent
