@@ -170,15 +170,19 @@ Item {
                         anchors.fill: parent
                     }
 
-                    RowLayout {
-                        spacing: 10
-                        anchors.centerIn: parent
+                    ColumnLayout {
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.margins: 10
+                        spacing: -10
 
                         Button {
                             id: editButton
-                            Material.background: "#6C63FF"
+                            Material.background: "transparent"
+                            Layout.preferredHeight: 50
+                            Layout.preferredWidth: 50
                             Image {
-                                source: "https://www.iconsdb.com/icons/preview/white/edit-xxl.png"
+                                source: "edit_icon.png"
                                 fillMode: Image.PreserveAspectFit
                                 width: 20
                                 height: 20
@@ -197,9 +201,11 @@ Item {
 
                         Button {
                             id: deleteButton
-                            Material.background: "#6C63FF"
+                            Material.background: "transparent"
+                            Layout.preferredHeight: 50
+                            Layout.preferredWidth: 50
                             Image {
-                                source: "https://www.iconsdb.com/icons/preview/white/delete-xxl.png"
+                                source: "delete_icon.png"
                                 fillMode: Image.PreserveAspectFit
                                 width: 20
                                 height: 20

@@ -6,5 +6,7 @@
         <file>classesScreen.qml</file>
         <file>Addclass.qml</file>
         <file>EditClass.qml</file>
+        <file>delete_icon.png</file>
+        <file>edit_icon.png</file>
     </qresource>
 </RCC>
