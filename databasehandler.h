@@ -14,12 +14,14 @@ public:
     Q_INVOKABLE QVariantList getClasses();
     Q_INVOKABLE bool addClass(const QString &className, const int &studentCount, const QString &teacherName, const QString &centerName);
     Q_INVOKABLE bool editClass(const int iD, const QString &className, const int &studentCount, const QString &teacherName, const QString &centerName);
+    Q_INVOKABLE bool deleteClass(const int id);
 
+signals:
+    void classDeleted(int id);
 
 private:
     QSqlDatabase db;
 
-signals:
 };
 
 #endif // DATABASEHANDLER_H

@@ -9,7 +9,7 @@
 void initializeDatabase() {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(QDir::currentPath() + "/application.db");
-
+    qDebug() << QDir::currentPath() + "/application.db";
     if (!db.open()) {
         qWarning() << "Cannot connect to the database.";
         return;
