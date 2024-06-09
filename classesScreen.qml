@@ -1,23 +1,29 @@
-import QtQuick
-import QtQuick.Controls.Material
-import QtQuick.Layouts
-import QtQuick.Controls
+import QtQuick 2.15
+import QtQuick.Controls.Material 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Controls 2.15
 import DatabaseHandler 1.0
 
 Item {
     id: classesScreen
-    Material.theme: Material.Light // or Material.Light
+    Material.theme: Material.Light
     Material.primary: Material.Blue
     Material.accent: Material.Pink
 
-    DatabaseHandler{
+    DatabaseHandler {
         id: dbhandler
+        onClassDeleted: function(id) {
+            for (var i = 0; i < classModel.count; ++i) {
+                if (classModel.get(i).id === id) {
+                    classModel.remove(i);
+                    break;
+                }
+            }
+        }
     }
 
     function loadClasses() {
-        // to get latest classes
         var classes = dbhandler.getClasses();
-
         classModel.clear();
         for (let i = 0; i < classes.length; i++) {
             classModel.append(classes[i]);
@@ -31,38 +37,34 @@ Item {
         anchors.fill: parent
         color: "#FFFFFF"
 
-        // The Addclass Dialog Box
         Addclass {
-            id:forclass
+            id: forclass
             visible: false
             anchors.centerIn: parent
-            onFormSubmitted: function(className, studentCount, teacherName, centerName){
-                                console.log("signal received");
-                                var response = dbhandler.addClass(className, Number(studentCount), teacherName, centerName);
-                                console.log(response);
-                                loadClasses();
-                            }
+            onFormSubmitted: function(className, studentCount, teacherName, centerName) {
+                console.log("signal received");
+                var response = dbhandler.addClass(className, Number(studentCount), teacherName, centerName);
+                console.log(response);
+                loadClasses();
+            }
         }
 
         EditClass {
             id: editclass
             visible: false
             anchors.centerIn: parent
-
-            onEditformSubmitted: function(iD, classNamet, studentCountt, teacherNamet, centerNamet) {
-                console.log("edit signal recieved");
-                var response = dbhandler.editClass(iD, classNamet, studentCountt, teacherNamet, centerNamet);
+            onEditformSubmitted: function(id, classNamet, studentCountt, teacherNamet, centerNamet) {
+                console.log("edit signal received");
+                var response = dbhandler.editClass(id, classNamet, studentCountt, teacherNamet, centerNamet);
                 console.log(response);
                 loadClasses();
             }
-
         }
 
         ColumnLayout {
             anchors.fill: parent
             spacing: 50
 
-            // Top bar with Back button and Profile icon
             Rectangle {
                 id: topBar
                 height: 50
@@ -94,7 +96,6 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
-
                 Button {
                     background: Rectangle {
                         color: "#6C63FE"
@@ -108,16 +109,12 @@ Item {
                         height: 25
                         fillMode: Image.PreserveAspectFit
                         anchors.centerIn: parent
-
                     }
                     anchors.right: parent.right
                     anchors.rightMargin: 50
                 }
-
             }
 
-
-            // Heading bar
             Rectangle {
                 id: headingBar
                 anchors.top: topBar.bottom
@@ -134,10 +131,9 @@ Item {
                         text: qsTr("Classes")
                         font.pixelSize: 30
                         font.bold: true
-                        color: "#6C63FE"  // Purple color
+                        color: "#6C63FE"
                         Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                     }
-
 
                     Button {
                         text: "+ Add Class"
@@ -157,10 +153,7 @@ Item {
                             forclass.open()
                         }
                     }
-
                 }
-
-
             }
 
             Component {
@@ -175,7 +168,6 @@ Item {
                     MouseArea {
                         id: mouseArea
                         anchors.fill: parent
-
                     }
 
                     RowLayout {
@@ -186,19 +178,12 @@ Item {
                             id: editButton
                             Material.background: "#6C63FF"
                             text: "edit"
-                            // Image {
-                            //     width: 20
-
-                            //     anchors.centerIn: parent
-                            //     source: "https://static.vecteezy.com/system/resources/thumbnails/019/552/595/small/sign-up-icon-signup-square-box-on-transparent-background-free-png.png"
-                            // }
                             contentItem: Text {
                                 text: "edit"
                                 color: "white"
                             }
-
                             onClicked: function() {
-                                editclass.iD = model.iD
+                                editclass.id = model.id
                                 editclass.classNamet = model.className
                                 editclass.studentCountt = model.studentCount
                                 editclass.teacherNamet = model.teacherName
@@ -211,24 +196,37 @@ Item {
                             id: deleteButton
                             text: "delete"
                             Material.background: "#6C63FF"
-
                             contentItem: Text {
                                 text: "delete"
                                 color: "white"
                             }
+                            onClicked: {
+                                deleteDialog.open();
+                            }
+                        }
 
+                        Dialog {
+                            id: deleteDialog
+                            title: "Confirm Delete"
+                            modal: true
+                            standardButtons: Dialog.Ok | Dialog.Cancel
+                            contentItem: Text {
+                                text: "Are you sure you want to delete this class?"
+                                width: parent.width
+                                wrapMode: Text.WordWrap
+                            }
+                            onAccepted: {
+                                dbhandler.deleteClass(model.id);
+                            }
                         }
                     }
 
-
-
-                    Component.onCompleted: console.log(width, height)
                     ColumnLayout {
                         anchors.fill: parent
                         spacing: -40
 
                         RowLayout {
-                            Layout.preferredWidth:  parent.width
+                            Layout.preferredWidth: parent.width
                             Layout.alignment: Qt.AlignTop
                             Layout.topMargin: 20
                             Text {
@@ -247,14 +245,12 @@ Item {
                             }
                         }
 
-
                         Text {
                             text: model.teacherName
                             font.pixelSize: 14
                             Layout.leftMargin: 20
                             color: "#666666"
                         }
-
 
                         Text {
                             text: model.centerName
@@ -264,14 +260,12 @@ Item {
                         }
                     }
                 }
-
             }
 
             ListModel {
                 id: classModel
             }
 
-            // Grid of class cards
             Rectangle {
                 Layout.preferredWidth: rootFrame.width * 0.9
                 Layout.preferredHeight: rootFrame.height * 0.8
@@ -286,9 +280,7 @@ Item {
                     model: classModel
                     delegate: classDelegate
                 }
-
             }
-
         }
     }
 }
