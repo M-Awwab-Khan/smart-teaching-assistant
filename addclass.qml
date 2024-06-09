@@ -13,7 +13,6 @@ Dialog {
     modal: true
     signal formSubmitted(string className, int studentCount, string teacherName, string centerName)
 
-
     onAccepted: {
         console.log("emitting signal");
         formSubmitted(className.text, studentCount.text, teacherName.text, centerName.text)
@@ -30,24 +29,21 @@ Dialog {
             anchors {
                 left: parent.left
             }
-
             leftPadding: 20
-
             color: "black"
             placeholderText: qsTr("Class")
             font.pixelSize: 17
+            Keys.onReturnPressed: studentCount.forceActiveFocus() // Move to the next field on Enter key press
         }
+
         TextField {
             id: studentCount
             Layout.preferredWidth: parent.width / 2 + 270
             Layout.preferredHeight: 60
-
             anchors {
                 left: parent.left
             }
-
             leftPadding: 20
-
             color: "black"
             placeholderText: qsTr("No of students")
             font.pixelSize: 17
@@ -55,7 +51,9 @@ Dialog {
                 bottom: 1
                 top: 10000
             }
+            Keys.onReturnPressed: teacherName.forceActiveFocus() // Move to the next field on Enter key press
         }
+
         TextField {
             id: teacherName
             Layout.preferredWidth: parent.width / 2 + 270
@@ -63,13 +61,13 @@ Dialog {
             anchors {
                 left: parent.left
             }
-
             leftPadding: 20
-
             color: "black"
             placeholderText: qsTr("Teacher")
             font.pixelSize: 17
+            Keys.onReturnPressed: centerName.forceActiveFocus() // Move to the next field on Enter key press
         }
+
         TextField {
             id: centerName
             Layout.preferredWidth: parent.width / 2 + 270
@@ -77,12 +75,11 @@ Dialog {
             anchors {
                 left: parent.left
             }
-
             leftPadding: 20
-
             color: "black"
             placeholderText: qsTr("Couching Center")
             font.pixelSize: 17
+            Keys.onReturnPressed: dialog.accept() // Submit the form on Enter key press
         }
     }
 }
