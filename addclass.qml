@@ -13,6 +13,26 @@ Dialog {
     modal: true
     signal formSubmitted(string className, int studentCount, string teacherName, string centerName)
 
+    function moveFocusDown() {
+        if (className.focus) {
+            studentCount.forceActiveFocus();
+        } else if (studentCount.focus) {
+            teacherName.forceActiveFocus();
+        } else if (teacherName.focus) {
+            centerName.forceActiveFocus();
+        }
+    }
+
+    function moveFocusUp() {
+        if (centerName.focus) {
+            teacherName.forceActiveFocus();
+        } else if (teacherName.focus) {
+            studentCount.forceActiveFocus();
+        } else if (studentCount.focus) {
+            className.forceActiveFocus();
+        }
+    }
+
     onAccepted: {
         console.log("emitting signal");
         formSubmitted(className.text, studentCount.text, teacherName.text, centerName.text)
@@ -26,23 +46,23 @@ Dialog {
             Layout.preferredWidth: parent.width / 2 + 270
             Layout.preferredHeight: 60
             Layout.topMargin: 25
-            anchors {
-                left: parent.left
-            }
             leftPadding: 20
             color: "black"
             placeholderText: qsTr("Class")
             font.pixelSize: 17
-            Keys.onReturnPressed: studentCount.forceActiveFocus() // Move to the next field on Enter key press
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Down) {
+                    moveFocusDown();
+                } else if (event.key === Qt.Key_Up) {
+                    moveFocusUp();
+                }
+            }
         }
 
         TextField {
             id: studentCount
             Layout.preferredWidth: parent.width / 2 + 270
             Layout.preferredHeight: 60
-            anchors {
-                left: parent.left
-            }
             leftPadding: 20
             color: "black"
             placeholderText: qsTr("No of students")
@@ -51,35 +71,49 @@ Dialog {
                 bottom: 1
                 top: 10000
             }
-            Keys.onReturnPressed: teacherName.forceActiveFocus() // Move to the next field on Enter key press
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Down) {
+                    moveFocusDown();
+                } else if (event.key === Qt.Key_Up) {
+                    moveFocusUp();
+                }
+            }
         }
 
         TextField {
             id: teacherName
             Layout.preferredWidth: parent.width / 2 + 270
             Layout.preferredHeight: 60
-            anchors {
-                left: parent.left
-            }
             leftPadding: 20
             color: "black"
             placeholderText: qsTr("Teacher")
             font.pixelSize: 17
-            Keys.onReturnPressed: centerName.forceActiveFocus() // Move to the next field on Enter key press
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Down) {
+                    moveFocusDown();
+                } else if (event.key === Qt.Key_Up) {
+                    moveFocusUp();
+                }
+            }
         }
 
         TextField {
             id: centerName
             Layout.preferredWidth: parent.width / 2 + 270
             Layout.preferredHeight: 60
-            anchors {
-                left: parent.left
-            }
             leftPadding: 20
             color: "black"
             placeholderText: qsTr("Couching Center")
             font.pixelSize: 17
-            Keys.onReturnPressed: dialog.accept() // Submit the form on Enter key press
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Down) {
+                    moveFocusDown();
+                } else if (event.key === Qt.Key_Up) {
+                    moveFocusUp();
+                } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                    dialog.accept();
+                }
+            }
         }
     }
 }
