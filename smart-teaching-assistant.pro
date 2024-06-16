@@ -24,6 +24,7 @@ DISTFILES += \
     Addclass.qml \
     EditClass.qml \
     classesScreen.qml \
+    mainView.qml \
     welcomeScreen.qml
 
 HEADERS += \
