@@ -24,11 +24,9 @@ DISTFILES += \
     Addclass.qml \
     EditClass.qml \
     classesScreen.qml \
-<<<<<<< HEAD
     manage_class.qml \
-=======
-    mainView.qml \
->>>>>>> 10f22ba89894ec75db880f15be2c406d539f5998
+    manage_quiz_And_board.qml \
+    quizScreen.qml \
     welcomeScreen.qml
 
 

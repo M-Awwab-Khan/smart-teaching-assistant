@@ -12,22 +12,23 @@ Item {
 
     DatabaseHandler {
         id: dbhandler
-        onClassDeleted: function(id) {
+        onClassDeleted: function (id) {
             for (var i = 0; i < classModel.count; ++i) {
                 if (classModel.get(i).id === id) {
-                    classModel.remove(i);
-                    break;
+                    classModel.remove(i)
+                    break
                 }
             }
         }
     }
 
     function loadClasses() {
-        var classes = dbhandler.getClasses();
-        classModel.clear();
-        for (let i = 0; i < classes.length; i++) {
-            classModel.append(classes[i]);
+        var classes = dbhandler.getClasses()
+        classModel.clear()
+        for (var i = 0; i < classes.length; i++) {
+            classModel.append(classes[i])
         }
+        console.log("classes loaded successfully!")
     }
 
     Component.onCompleted: loadClasses()
@@ -41,11 +42,13 @@ Item {
             id: forclass
             visible: false
             anchors.centerIn: parent
-            onFormSubmitted: function(className, studentCount, teacherName, centerName) {
-                console.log("signal received");
-                var response = dbhandler.addClass(className, Number(studentCount), teacherName, centerName);
-                console.log(response);
-                loadClasses();
+            onFormSubmitted: function (className, studentCount, teacherName, centerName) {
+                console.log("signal received")
+                var response = dbhandler.addClass(className,
+                                                  Number(studentCount),
+                                                  teacherName, centerName)
+                console.log(response)
+                loadClasses()
             }
         }
 
@@ -53,11 +56,13 @@ Item {
             id: editclass
             visible: false
             anchors.centerIn: parent
-            onEditformSubmitted: function(id, classNamet, studentCountt, teacherNamet, centerNamet) {
-                console.log("edit signal received");
-                var response = dbhandler.editClass(id, classNamet, studentCountt, teacherNamet, centerNamet);
-                console.log(response);
-                loadClasses();
+            onEditformSubmitted: function (id, classNamet, studentCountt, teacherNamet, centerNamet) {
+                console.log("edit signal received")
+                var response = dbhandler.editClass(id, classNamet,
+                                                   studentCountt, teacherNamet,
+                                                   centerNamet)
+                console.log(response)
+                loadClasses()
             }
         }
 
@@ -65,6 +70,7 @@ Item {
             anchors.fill: parent
             spacing: 50
 
+            // top bar
             Rectangle {
                 id: topBar
                 height: 50
@@ -75,6 +81,7 @@ Item {
                     right: parent.right
                 }
 
+                // back button
                 Button {
                     text: qsTr("← Back")
                     Material.background: "#6C63FF"
@@ -96,6 +103,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
+                // profile icon
                 Button {
                     background: Rectangle {
                         color: "#6C63FE"
@@ -115,6 +123,7 @@ Item {
                 }
             }
 
+            // heading bar with add class button
             Rectangle {
                 id: headingBar
                 anchors.top: topBar.bottom
@@ -156,8 +165,10 @@ Item {
                 }
             }
 
+            // the class delegate
             Component {
                 id: classDelegate
+
                 Rectangle {
                     id: classRect
                     width: 250
@@ -168,6 +179,7 @@ Item {
                     MouseArea {
                         id: mouseArea
                         anchors.fill: parent
+                        onClicked: stackView.push('manage_quiz_And_board.qml')
                     }
 
                     ColumnLayout {
@@ -189,7 +201,7 @@ Item {
                                 anchors.centerIn: parent
                             }
 
-                            onClicked: function() {
+                            onClicked: function () {
                                 editclass.iD = model.id
                                 editclass.classNamet = model.className
                                 editclass.studentCountt = model.studentCount
@@ -213,7 +225,7 @@ Item {
                             }
 
                             onClicked: {
-                                deleteDialog.open();
+                                deleteDialog.open()
                             }
                         }
 
@@ -235,10 +247,9 @@ Item {
                                 text: "Are you sure you want to delete this class?"
                                 width: parent.width
                                 wrapMode: Text.WordWrap
-
                             }
                             onAccepted: {
-                                dbhandler.deleteClass(model.id);
+                                dbhandler.deleteClass(model.id)
                             }
                         }
                     }
@@ -288,6 +299,7 @@ Item {
                 id: classModel
             }
 
+            // Grid View
             Rectangle {
                 Layout.preferredWidth: rootFrame.width * 0.9
                 Layout.preferredHeight: rootFrame.height * 0.8

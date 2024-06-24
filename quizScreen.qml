@@ -5,40 +5,33 @@ import QtQuick.Layouts
 
 Item {
 
-
-    // Window {
-    //     width: 1100
-    //     height: 600
-    //     visible: true
-    //     title: qsTr("Hello World")
+    Rectangle {
+        width: 300
+        height: 400
+        color: "transparent"
+        anchors.right: parent.right
+        anchors.rightMargin: 100
+        anchors.verticalCenter: parent.verticalCenter
 
         Rectangle {
-            width: 300
-            height: 400
+            width: parent.width
+            height: parent.height
             color: "transparent"
-            anchors.right: parent.right
-            anchors.rightMargin: 100
-            anchors.verticalCenter: parent.verticalCenter
+            border.color: "black"
+            border.width: 2
+            anchors.centerIn: parent
 
-            Rectangle {
-                width: parent.width
-                height: parent.height
-                color: "transparent"
-                border.color: "black"
-                border.width: 2
-                anchors.centerIn: parent
-
-                Image {
-                    source: "https://image.slidesharecdn.com/circlecorrectanswer-121119092003-phpapp02/95/circle-the-correct-answer-1-638.jpg?cb=1353316885"
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.margins: 3
-                    fillMode: Image.PreserveAspectFit
-                }
+            Image {
+                source: "https://image.slidesharecdn.com/circlecorrectanswer-121119092003-phpapp02/95/circle-the-correct-answer-1-638.jpg?cb=1353316885"
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.margins: 3
+                fillMode: Image.PreserveAspectFit
             }
         }
+    }
 
         RowLayout {
             anchors.fill: parent
@@ -167,5 +160,3 @@ Item {
             }
         }
     }
-
-// }
