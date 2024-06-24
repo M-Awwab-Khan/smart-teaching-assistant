@@ -24,7 +24,9 @@ DISTFILES += \
     Addclass.qml \
     EditClass.qml \
     classesScreen.qml \
+    manage_class.qml \
     welcomeScreen.qml
+    manage_quiz_And_board.qml\
 
 HEADERS += \
     databasehandler.h
