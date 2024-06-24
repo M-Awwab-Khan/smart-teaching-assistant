@@ -8,6 +8,7 @@
         <file>EditClass.qml</file>
         <file>delete_icon.png</file>
         <file>edit_icon.png</file>
-        <file>mainView.qml</file>
+        <file>quizScreen.qml</file>
+        <file>manage_quiz_And_board.qml</file>
     </qresource>
 </RCC>
