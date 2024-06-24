@@ -8,5 +8,6 @@
         <file>EditClass.qml</file>
         <file>delete_icon.png</file>
         <file>edit_icon.png</file>
+        <file>mainView.qml</file>
     </qresource>
 </RCC>
