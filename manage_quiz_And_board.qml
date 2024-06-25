@@ -4,15 +4,9 @@ import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Dialogs
 
-Window {
-
+Item {
     id: mainwindow
-    maximumWidth: 640
-    maximumHeight: 550
-    minimumWidth: 640
-    minimumHeight: 550
-    visible: true
-    title: qsTr("Hello World")
+    anchors.fill: parent
 
     ListModel {
         id: quizModel
@@ -26,6 +20,7 @@ Window {
         id: dialog_quiz
         height: 550
         width: 600
+        anchors.centerIn: parent
         title: "Add Quiz"
         standardButtons: Dialog.Ok | Dialog.Cancel
         modal: true
@@ -121,7 +116,6 @@ Window {
                 height: 60
                 radius: 7
                 anchors.left: parent.left
-                border.color: "black"
                 Button {
                     text: "Select test"
                     onClicked: fileDialog.open()
@@ -147,6 +141,7 @@ Window {
         id: dialog_whiteboard
         height: 500
         width: 600
+        anchors.centerIn: parent
         title: "White Board"
         standardButtons: Dialog.Ok | Dialog.Cancel
         modal: true
@@ -156,23 +151,6 @@ Window {
         Material.primary: Material.Blue
         Material.accent: "#6C63FF"
 
-        // function moveFocusDown() {
-        //     if (title.focus) {
-        //         date.forceActiveFocus();
-        //     } else if (date.focus) {
-        //         marks.forceActiveFocus();
-        //     }
-        // }
-
-        // function moveFocusUp() {
-        //     if (centerName.focus) {
-        //         teacherName.forceActiveFocus();
-        //     } else if (teacherName.focus) {
-        //         studentCount.forceActiveFocus();
-        //     } else if (studentCount.focus) {
-        //         className.forceActiveFocus();
-        //     }
-        // }
         onAccepted: {
             console.log("emitting signal")
             formSubmitted2(name.text, date2.text)
@@ -220,6 +198,7 @@ Window {
             }
         }
     }
+
     ColumnLayout {
         anchors.fill: parent
 
@@ -261,286 +240,342 @@ Window {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
             }
+
+            // profile icon
+            Button {
+                background: Rectangle {
+                    color: "#6C63FE"
+                    radius: 10
+                }
+                height: 50
+                width: 50
+                Image {
+                    source: "https://static-00.iconduck.com/assets.00/avatar-icon-256x256-lc2hm878.png"
+                    width: 25
+                    height: 25
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                }
+                anchors.right: parent.right
+                anchors.rightMargin: 50
+            }
         }
+
         Rectangle {
-            Layout.preferredHeight: 70
-            anchors.top: topBar.bottom
-            anchors.margins: 40
+            id: contentFrame
+            width: 670
+            height: 600
 
             anchors {
-                left: parent.left
-                right: parent.right
+                top: topBar.bottom
+                horizontalCenter: topBar.horizontalCenter
+                topMargin: 80
             }
 
-            RowLayout {
+            ColumnLayout {
 
-                Rectangle {
+                RowLayout {
+                    id: headingsRow
+                    spacing: 30
 
-                    height: 40
-                    width: 280
-                    color: "#E0E0FF"
-                    anchors.left: parent.left
-                    anchors.leftMargin: -20
-                    radius: 7
-
-                    Text {
-                        id: text1
-                        color: "#5D3FD3"
-                        text: qsTr("Quizzes")
-                        font.pixelSize: 20
-                        font.bold: true
-                        anchors.verticalCenter: parent.verticalCenter
-                        leftPadding: 15
-                    }
-                    Button {
-                        background: Rectangle {
-                            color: "transparent" // Same color as the parent Rectangle to blend in
-                        }
-                        contentItem: Text {
-                            text: "+"
-                            color: "#5D3FD3"
-                            font.pixelSize: 24
-                            font.bold: true
-                            leftPadding: 230
-                            topPadding: -11
-                        }
-                        onClicked: dialog_quiz.open()
-                    }
-                }
-
-                Rectangle {
-                    height: 40
-                    width: 280
-                    color: "#E0E0FF"
-                    radius: 7
-                    anchors.right: parent.right
-                    anchors.rightMargin: 15
-                    Text {
-                        id: text2
-                        color: "#5D3FD3"
-                        text: qsTr("Whiteboards")
-                        font.pixelSize: 20
-                        font.bold: true
-                        anchors.verticalCenter: parent.verticalCenter
-                        leftPadding: 15
-                    }
-                    Button {
-                        background: Rectangle {
-                            color: "transparent" // Same color as the parent Rectangle to blend in
-                        }
-                        contentItem: Text {
-                            text: "+"
-                            color: "#5D3FD3"
-                            font.pixelSize: 24
-                            font.bold: true
-                            leftPadding: 230
-                            topPadding: -12
-                        }
-                        onClicked: dialog_whiteboard.open()
-                    }
-                }
-            }
-        }
-
-        ListView {
-
-            anchors.fill: parent
-            anchors.leftMargin: 25
-            anchors.topMargin: 170
-            width: parent.fillHeight
-            height: parent.fillWidth
-            model: quizModel
-            delegate: Item {
-                width: 300
-                height: 70
-                Button {
-                    id: myButton2
-                    width: 280
-                    height: 60
-                    background: Rectangle {
-                        border.color: "#666666"
-                        width: parent.width
-                        height: parent.height
+                    Rectangle {
+                        id: quizHeading
+                        height: 40
+                        color: "#E0E0FF"
                         radius: 7
-                    }
-                    property string originalText: model.title
-                    property string truncatedText: originalText
-
-                    font.pixelSize: 15
-                    contentItem: Text {
-                        text: myButton2.truncatedText
-                        font: myButton2.font
-                        anchors.centerIn: parent
-                        horizontalAlignment: Text.AlignLeft
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                    }
-
-                    TextMetrics {
-                        id: textMetrics
-
-                        font: myButton2.font
-                        text: myButton2.originalText
-                    }
-
-                    function truncateText() {
-
-                        var text = myButton2.originalText
-                        var metrics = textMetrics.width
-
-                        if (metrics > maxWidth) {
-                            var ellipsis = "..."
-                            var ellipsisWidth = textMetrics.widthForText(
-                                        ellipsis)
-                            var truncatedText = text
-
-                            while (metrics + ellipsisWidth > maxWidth
-                                   && truncatedText.length > 0) {
-                                truncatedText = truncatedText.slice(0, -1)
-                                textMetrics.text = truncatedText
-                                metrics = textMetrics.width
-                            }
-                            truncatedText += ellipsis
-                            myButton2.truncatedText = truncatedText
-                        } else {
-                            myButton2.truncatedText = text
-                        }
-                    }
-
-                    onWidthChanged: truncateText()
-                    onOriginalTextChanged: truncateText()
-
-                    text: truncatedText
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        spacing: -10
+                        Layout.fillWidth: true
 
                         RowLayout {
-                            spacing: 95
-                            Layout.preferredWidth: parent.width
-                            Layout.alignment: Qt.AlignTop
-                            Layout.topMargin: 30
+                            anchors.fill: parent
 
                             Text {
-                                text: model.date
-                                font.pixelSize: 12
-                                color: "#666666"
-                                Layout.leftMargin: 20
-                                topPadding: 10
+                                id: text1
+                                color: "#5D3FD3"
+                                text: qsTr("Quizzes")
+                                font.pixelSize: 20
+                                font.bold: true
+                                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                                Layout.fillHeight: true
+                                Layout.topMargin: 6
+                                Layout.leftMargin: 10
                             }
-
-                            Text {
-                                text: "Max Marks: " + model.marks
-                                color: "#666666"
-                                font.pixelSize: 12
-                                Layout.rightMargin: 45
+                            Button {
                                 Layout.alignment: Qt.AlignRight
-                                topPadding: 10
+                                Layout.rightMargin: 5
+                                Layout.topMargin: -10
+                                Material.background: "transparent"
+                                contentItem: Text {
+                                    text: "+"
+                                    color: "#5D3FD3"
+                                    font.pixelSize: 24
+                                    font.bold: true
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                                onClicked: {
+                                    dialog_quiz.open()
+                                    console.log("open dialog quiz")
+                                }
                             }
                         }
                     }
-                    onClicked: {
-                        console.log("Quiz button clicked")
-                    }
-                }
-            }
-        }
-        ListView {
 
-            anchors.fill: parent
-            anchors.leftMargin: 310
-            anchors.topMargin: 170
-            width: parent.fillHeight
-            height: parent.fillWidth
-            model: whiteboardModel
-            delegate: Item {
-                width: 300
-                height: 70
-                Button {
-                    id: myButton
-                    width: 280
-                    height: 60
-
-                    background: Rectangle {
-                        border.color: "#666666"
-                        width: parent.width
-                        height: parent.height
+                    Rectangle {
+                        id: whiteboardHeading
+                        height: 40
+                        color: "#E0E0FF"
                         radius: 7
-                    }
-                    property string originalText: model.name
-                    property string truncatedText: originalText
-                    font.pixelSize: 15
-                    contentItem: Text {
-                        text: myButton.truncatedText
-                        font: myButton.font
-                        anchors.centerIn: parent
-                        horizontalAlignment: Text.AlignLeft
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                    }
-
-                    TextMetrics {
-                        id: textMetrics2
-
-                        font: myButton.font
-                        text: myButton.originalText
-                    }
-
-                    function truncateText() {
-
-                        var text = myButton.originalText
-                        var metrics = textMetrics2.width
-
-                        if (metrics > maxWidth) {
-                            var ellipsis = "..."
-                            var ellipsisWidth = textMetrics2.widthForText(
-                                        ellipsis)
-                            var truncatedText = text
-
-                            while (metrics + ellipsisWidth > maxWidth
-                                   && truncatedText.length > 0) {
-                                truncatedText = truncatedText.slice(0, -1)
-                                textMetrics.text = truncatedText
-                                metrics = textMetrics2.width
-                            }
-                            truncatedText += ellipsis
-                            myButton.truncatedText = truncatedText
-                        } else {
-                            myButton.truncatedText = text
-                        }
-                    }
-
-                    onWidthChanged: truncateText()
-                    onOriginalTextChanged: truncateText()
-
-                    text: truncatedText
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        spacing: -10
+                        Layout.fillWidth: true
 
                         RowLayout {
-                            spacing: 95
-                            Layout.preferredWidth: parent.width
-                            Layout.alignment: Qt.AlignTop
-                            Layout.topMargin: 30
+                            anchors.fill: parent
 
                             Text {
-                                text: model.date2
-                                font.pixelSize: 12
-                                color: "#666666"
-                                Layout.leftMargin: 20
-                                topPadding: 10
+                                id: text2
+                                color: "#5D3FD3"
+                                text: qsTr("Whiteboards")
+                                font.pixelSize: 20
+                                font.bold: true
+                                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                                Layout.fillHeight: true
+                                Layout.topMargin: 6
+                                Layout.leftMargin: 10
+                            }
+                            Button {
+                                Layout.alignment: Qt.AlignRight
+                                Layout.topMargin: -10
+                                Layout.rightMargin: 5
+                                Material.background: "transparent"
+                                contentItem: Text {
+                                    text: "+"
+                                    color: "#5D3FD3"
+                                    font.pixelSize: 24
+                                    font.bold: true
+                                }
+                                onClicked: dialog_whiteboard.open()
                             }
                         }
                     }
-                    onClicked: {
-                        console.log("White board button clicked")
+                }
+
+                // the two list views
+                RowLayout {
+                    Layout.topMargin: 40
+                    id: listviews
+                    spacing: 30
+
+                    ListView {
+                        width: 320
+                        height: 400
+                        clip: true
+                        model: quizModel
+                        anchors {
+                            left: contentFrame.left
+                            top: headingsRow.bottom
+                        }
+
+                        delegate: Item {
+                            width: 320
+                            height: 70
+                            Button {
+                                id: myButton2
+                                width: 320
+                                height: 60
+                                background: Rectangle {
+                                    border.color: "#666666"
+                                    width: parent.width
+                                    height: parent.height
+                                    radius: 7
+                                }
+                                property string originalText: model.title
+                                property string truncatedText: originalText
+
+                                font.pixelSize: 15
+                                contentItem: Text {
+                                    text: myButton2.truncatedText
+                                    font: myButton2.font
+                                    anchors.centerIn: parent
+                                    horizontalAlignment: Text.AlignLeft
+                                    verticalAlignment: Text.AlignVCenter
+                                    elide: Text.ElideRight
+                                }
+
+                                TextMetrics {
+                                    id: textMetrics
+
+                                    font: myButton2.font
+                                    text: myButton2.originalText
+                                }
+
+                                function truncateText() {
+
+                                    var text = myButton2.originalText
+                                    var metrics = textMetrics.width
+                                    var maxWidth = 100
+                                    if (metrics > maxWidth) {
+                                        var ellipsis = "..."
+                                        var ellipsisWidth = textMetrics.widthForText(
+                                                    ellipsis)
+                                        var truncatedText = text
+
+                                        while (metrics + ellipsisWidth > maxWidth
+                                               && truncatedText.length > 0) {
+                                            truncatedText = truncatedText.slice(
+                                                        0, -1)
+                                            textMetrics.text = truncatedText
+                                            metrics = textMetrics.width
+                                        }
+                                        truncatedText += ellipsis
+                                        myButton2.truncatedText = truncatedText
+                                    } else {
+                                        myButton2.truncatedText = text
+                                    }
+                                }
+
+                                onWidthChanged: truncateText()
+                                onOriginalTextChanged: truncateText()
+
+                                text: truncatedText
+
+                                ColumnLayout {
+                                    anchors.fill: parent
+                                    spacing: -10
+
+                                    RowLayout {
+                                        spacing: 95
+                                        Layout.preferredWidth: parent.width
+                                        Layout.alignment: Qt.AlignTop
+                                        Layout.topMargin: 30
+
+                                        Text {
+                                            text: model.date
+                                            font.pixelSize: 12
+                                            color: "#666666"
+                                            Layout.leftMargin: 23
+                                            Layout.topMargin: 10
+                                        }
+
+                                        Text {
+                                            text: "Max Marks: " + model.marks
+                                            color: "#666666"
+                                            font.pixelSize: 12
+                                            Layout.rightMargin: 45
+                                            Layout.alignment: Qt.AlignRight
+                                        }
+                                    }
+                                }
+                                onClicked: {
+                                    console.log("Quiz button clicked")
+                                }
+                            }
+                        }
+                    }
+
+                    ListView {
+                        width: 320
+                        height: 400
+                        clip: true
+                        model: whiteboardModel
+
+                        anchors {
+                            left: contentFrame.right
+                            top: headingsRow.bottom
+                        }
+                        delegate: Item {
+                            width: 320
+                            height: 70
+
+                            Button {
+                                id: myButton
+                                width: 320
+                                height: 60
+
+                                background: Rectangle {
+                                    border.color: "#666666"
+                                    width: parent.width
+                                    height: parent.height
+                                    radius: 7
+                                }
+                                property string originalText: model.name
+                                property string truncatedText: originalText
+                                font.pixelSize: 15
+                                contentItem: Text {
+                                    text: myButton.truncatedText
+                                    font: myButton.font
+                                    anchors.centerIn: parent
+                                    horizontalAlignment: Text.AlignLeft
+                                    verticalAlignment: Text.AlignVCenter
+                                    elide: Text.ElideRight
+                                }
+
+                                TextMetrics {
+                                    id: textMetrics2
+
+                                    font: myButton.font
+                                    text: myButton.originalText
+                                }
+
+                                function truncateText() {
+
+                                    var text = myButton.originalText
+                                    var metrics = textMetrics2.width
+                                    var maxWidth = 100
+
+                                    if (metrics > maxWidth) {
+                                        var ellipsis = "..."
+                                        var ellipsisWidth = textMetrics2.widthForText(
+                                                    ellipsis)
+                                        var truncatedText = text
+
+                                        while (metrics + ellipsisWidth > maxWidth
+                                               && truncatedText.length > 0) {
+                                            truncatedText = truncatedText.slice(
+                                                        0, -1)
+                                            textMetrics.text = truncatedText
+                                            metrics = textMetrics2.width
+                                        }
+                                        truncatedText += ellipsis
+                                        myButton.truncatedText = truncatedText
+                                    } else {
+                                        myButton.truncatedText = text
+                                    }
+                                }
+
+                                onWidthChanged: truncateText()
+                                onOriginalTextChanged: truncateText()
+
+                                text: truncatedText
+
+                                ColumnLayout {
+                                    anchors.fill: parent
+                                    spacing: -10
+
+                                    RowLayout {
+                                        spacing: 95
+                                        Layout.preferredWidth: parent.width
+                                        Layout.alignment: Qt.AlignTop
+                                        Layout.topMargin: 30
+
+                                        Text {
+                                            text: model.date2
+                                            font.pixelSize: 12
+                                            color: "#666666"
+                                            Layout.leftMargin: 23
+                                            Layout.topMargin: 10
+                                        }
+                                    }
+                                }
+                                onClicked: {
+                                    console.log("White board button clicked")
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+
+        // quizzes and whiteboards headings
     }
 
     Connections {
