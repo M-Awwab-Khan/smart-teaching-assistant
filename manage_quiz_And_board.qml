@@ -360,7 +360,6 @@ Item {
 
                 // the two list views
                 RowLayout {
-                    Layout.topMargin: 40
                     id: listviews
                     spacing: 30
 
@@ -465,7 +464,7 @@ Item {
                                     }
                                 }
                                 onClicked: {
-                                    console.log("Quiz button clicked")
+                                    stackView.push("quizScreen.qml")
                                 }
                             }
                         }

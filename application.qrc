@@ -10,5 +10,6 @@
         <file>edit_icon.png</file>
         <file>quizScreen.qml</file>
         <file>manage_quiz_And_board.qml</file>
+        <file>quiz.jpg</file>
     </qresource>
 </RCC>
