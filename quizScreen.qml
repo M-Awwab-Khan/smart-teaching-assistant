@@ -135,16 +135,15 @@ Item {
             anchors.top: topBar.bottom
             Layout.preferredWidth: parent.width / 2
             Layout.preferredHeight: paernt.height
-            color: "blue"
-            anchors.right: parent.right
-            anchors.rightMargin: 100
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.fillHeight: true
+            color: "transparent"
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
             Image {
                 source: "quiz.jpg"
-                width: parent.width * 0.6
-                height: parent.height * 0.9
-                anchors.margins: 3
+                width: parent.width * 0.8
+                height: parent.height * 0.8
+                anchors.topMargin: 20
                 anchors.centerIn: parent
                 fillMode: Image.PreserveAspectFit
             }
