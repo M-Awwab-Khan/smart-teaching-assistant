@@ -3,7 +3,11 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QDir>
+#include <QQmlContext>
 #include "databasehandler.h"
+#include "opencvimageprovider.h"
+#include "videostreamer.h"
+#include "whiteboardmanager.h"
 
 
 void initializeDatabase() {
@@ -31,7 +35,20 @@ int main(int argc, char *argv[])
     // to use any custom class in qml, you need to register it
     qmlRegisterType<DatabaseHandler>("DatabaseHandler", 1, 0, "DatabaseHandler");
 
+    VideoStreamer videoStreamer;
+    WhiteboardManager whiteboardManager;
+
     QQmlApplicationEngine engine;
+
+    OpenCVImageProvider *whiteboardImageProvider(new OpenCVImageProvider);
+
+    engine.rootContext()->setContextProperty("whiteboardImageProvider", whiteboardImageProvider);
+    engine.rootContext()->setContextProperty("videoStreamer", &videoStreamer);
+    engine.rootContext()->setContextProperty("whiteboardManager", &whiteboardManager);
+
+    engine.addImageProvider("whiteboard", whiteboardImageProvider);
+
+
     const QUrl url(QStringLiteral("qrc:/smart-teaching-assistant/main.qml"));
     QObject::connect(
         &engine,
@@ -43,6 +60,9 @@ int main(int argc, char *argv[])
         },
         Qt::QueuedConnection);
     engine.load(url);
+
+    QObject::connect(&videoStreamer, &VideoStreamer::newImage, &whiteboardManager, &WhiteboardManager::processFrame);
+    QObject::connect(&whiteboardManager, &WhiteboardManager::newWeightedImage, whiteboardImageProvider, &OpenCVImageProvider::updateImage);
 
     return app.exec();
 }

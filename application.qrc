@@ -11,5 +11,6 @@
         <file>quizScreen.qml</file>
         <file>manage_quiz_And_board.qml</file>
         <file>quiz.jpg</file>
+        <file>WhiteboardSession.qml</file>
     </qresource>
 </RCC>

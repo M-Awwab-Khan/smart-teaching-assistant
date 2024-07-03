@@ -545,6 +545,25 @@ Item {
 
                                 text: truncatedText
 
+                                Button {
+                                    id: editButton
+                                    Material.background: "transparent"
+                                    anchors.right: parent.right
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    Image {
+                                        source: "edit_icon.png"
+                                        fillMode: Image.PreserveAspectFit
+                                        width: 20
+                                        height: 20
+                                        anchors.centerIn: parent
+                                    }
+
+                                    onClicked: function () {
+                                        console.log("launch whiteboard")
+                                        stackView.push('WhiteboardSession.qml')
+                                    }
+                                }
+
                                 ColumnLayout {
                                     anchors.fill: parent
                                     spacing: -10
@@ -573,8 +592,6 @@ Item {
                 }
             }
         }
-
-        // quizzes and whiteboards headings
     }
 
     Connections {
