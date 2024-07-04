@@ -22,7 +22,48 @@ void initializeDatabase() {
     }
 
     QSqlQuery query;
-    query.exec("CREATE TABLE IF NOT EXISTS classes (id INTEGER PRIMARY KEY, className TEXT, studentCount INTEGER, teacherName TEXT, centerName TEXT)");
+    query.exec("CREATE TABLE IF NOT EXISTS classes (\
+               id INTEGER PRIMARY KEY,\
+               className TEXT, \
+               studentCount INTEGER, \
+               teacherName TEXT, \
+               centerName TEXT\
+               )");
+    query.exec("CREATE TABLE IF NOT EXISTS students  (\
+               student_id INTEGER PRIMARY KEY,\
+               class_id INTEGER,\
+               FOREIGN KEY (class_id) REFERENCES classes(id)\
+               )");
+    query.exec("CREATE TABLE IF NOT EXISTS quizzes (\
+               quiz_id INTEGER PRIMARY KEY,\
+               class_id INTEGER,\
+               quiz_name TEXT NOT NULL,\
+               total_marks INTEGER NOT NULL,\
+               negative_marking REAL DEFAULT 0,\
+               created_at TEXT DEFAULT CURRENT_TIMESTAMP,\
+               FOREIGN KEY (class_id) REFERENCES classes(class_id)\
+               )");
+    query.exec("CREATE TABLE IF NOT EXISTS marks (\
+               student_id INTEGER,\
+               quiz_id INTEGER,\
+               marks_obtained REAL,\
+               FOREIGN KEY (student_id) REFERENCES students(student_id),\
+               FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id)\
+               )");
+
+    query.exec("CREATE TABLE whiteboards (\
+               whiteboard_id INTEGER PRIMARY KEY AUTOINCREMENT,\
+               class_id INTEGER,\
+               created_at TEXT DEFAULT CURRENT_TIMESTAMP,\
+               FOREIGN KEY (class_id) REFERENCES classes(class_id)\
+               )");
+    query.exec("CREATE TABLE whiteboard_snapshots (\
+               snapshot_id INTEGER PRIMARY KEY AUTOINCREMENT,\
+               whiteboard_id INTEGER,\
+               image_path TEXT NOT NULL,\
+               created_at TEXT DEFAULT CURRENT_TIMESTAMP,\
+               FOREIGN KEY (whiteboard_id) REFERENCES whiteboards(whiteboard_id)\
+               )");
 
 }
 
