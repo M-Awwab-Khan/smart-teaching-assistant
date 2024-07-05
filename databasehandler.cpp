@@ -64,3 +64,22 @@ bool DatabaseHandler::deleteClass(const int id) {
     emit classDeleted(id);
     return true;
 }
+
+bool DatabaseHandler::addQuiz(const int &classId, const QString &title, const QString &date, const int &questionsCount, const int &totalMarks, const double &negativeMarks, const QString &answerKey, const QString &imagePath) {
+    QSqlQuery query;
+    query.prepare("INSERT INTO quizzes (class_id, quiz_name, total_marks, questions_count, negative_marking, answer_key, test_paper_img_path, taken_at)\
+                    VALUES (?, ?, ?, ?, ?, ?, ? , ?)");
+    query.addBindValue(classId);
+    query.addBindValue(title);
+    query.addBindValue(totalMarks);
+    query.addBindValue(questionsCount);
+    query.addBindValue(negativeMarks);
+    query.addBindValue(answerKey);
+    query.addBindValue(imagePath);
+    query.addBindValue(date);
+    if (!query.exec()) {
+        qWarning() << "Add quiz failed: " << query.lastError();
+        return false;
+    }
+    return true;
+}
