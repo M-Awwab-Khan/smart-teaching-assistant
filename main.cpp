@@ -56,6 +56,7 @@ void initializeDatabase() {
 
     query.exec("CREATE TABLE whiteboards (\
                whiteboard_id INTEGER PRIMARY KEY AUTOINCREMENT,\
+               whiteboard_name TEXT NOT NULL,\
                class_id INTEGER,\
                created_at TEXT DEFAULT CURRENT_TIMESTAMP,\
                assets_path TEXT NOT NULL,\

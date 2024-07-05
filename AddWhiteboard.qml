@@ -10,7 +10,7 @@ Dialog {
     title: "White Board"
     standardButtons: Dialog.Ok | Dialog.Cancel
     modal: true
-    signal formSubmitted2(string name, string created_at)
+    signal whiteboardFormSubmitted(string name, string created_at, string folderpath)
 
     Material.theme: Material.Light
     Material.primary: Material.Blue
@@ -18,7 +18,7 @@ Dialog {
 
     onAccepted: {
         console.log("emitting signal")
-        formSubmitted2(name.text, created_at.text, assets_path.text)
+        whiteboardFormSubmitted(name.text, created_at.text, folderpath.text)
         name.text = ""
         created_at.text = ""
     }
@@ -33,15 +33,8 @@ Dialog {
             Layout.topMargin: 25
             leftPadding: 20
             color: "black"
-            placeholderText: qsTr("title")
+            placeholderText: qsTr("Give a Title")
             font.pixelSize: 17
-            Keys.onPressed: {
-                if (event.key === Qt.Key_Down) {
-                    moveFocusDown()
-                } else if (event.key === Qt.Key_Up) {
-                    moveFocusUp()
-                }
-            }
         }
 
         TextField {
@@ -50,16 +43,9 @@ Dialog {
             Layout.preferredHeight: 60
             leftPadding: 20
             color: "black"
-            placeholderText: qsTr("date")
+            placeholderText: qsTr("Enter Date")
             font.pixelSize: 17
 
-            Keys.onPressed: {
-                if (event.key === Qt.Key_Down) {
-                    moveFocusDown()
-                } else if (event.key === Qt.Key_Up) {
-                    moveFocusUp()
-                }
-            }
         }
 
         Rectangle {

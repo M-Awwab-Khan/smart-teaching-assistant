@@ -20,8 +20,18 @@ Item {
         console.log("quizzes loaded successfully!")
     }
 
+    function loadWhiteboards() {
+        var whiteboards = dbhandler.getWhiteboards(classId)
+        whiteboardModel.clear()
+        for (var i = 0; i < whiteboards.length; i++) {
+            whiteboardModel.append(whiteboards[i])
+        }
+        console.log("whiteboards loaded successfully!")
+    }
+
     Component.onCompleted: function () {
         loadQuizzes()
+        loadWhiteboards()
     }
 
     DatabaseHandler {
@@ -56,6 +66,12 @@ Item {
         id: dialog_whiteboard
         visible: false
         anchors.centerIn: parent
+        onWhiteboardFormSubmitted: function(name, created_at, folderpath) {
+            console.log("add whiteboard signal received")
+            var response = dbhandler.addWhiteboard(classId, name, created_at, folderpath)
+            console.log(`is your whiteboard added: ${response}`)
+            loadWhiteboards()
+        }
     }
 
     ColumnLayout {
@@ -354,7 +370,7 @@ Item {
                                     height: parent.height
                                     radius: 7
                                 }
-                                property string originalText: model.name
+                                property string originalText: model.whiteboard_name
                                 property string truncatedText: originalText
                                 font.pixelSize: 15
                                 contentItem: Text {
@@ -434,7 +450,7 @@ Item {
                                         Layout.topMargin: 30
 
                                         Text {
-                                            text: model.date2
+                                            text: model.created_at
                                             font.pixelSize: 12
                                             color: "#666666"
                                             Layout.leftMargin: 23
