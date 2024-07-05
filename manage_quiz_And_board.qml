@@ -3,10 +3,17 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Dialogs
+import DatabaseHandler 1.0
 
 Item {
     id: mainwindow
     anchors.fill: parent
+
+    property int classId
+
+    DatabaseHandler {
+        id: dbhandler
+    }
 
     ListModel {
         id: quizModel
@@ -16,187 +23,25 @@ Item {
         id: whiteboardModel
     }
 
-    Dialog {
+    AddQuiz {
         id: dialog_quiz
-        height: 550
-        width: 600
+        visible: false
         anchors.centerIn: parent
-        title: "Add Quiz"
-        standardButtons: Dialog.Ok | Dialog.Cancel
-        modal: true
-        signal formSubmitted(string title, string date, int marks, string key)
-
-        Material.theme: Material.Light
-        Material.primary: Material.Blue
-        Material.accent: "#6C63FF"
-
-        onAccepted: {
-            console.log("emitting signalbasic")
-            formSubmitted(title.text, date.text, marks.text, key.text)
-            title.text = ""
-            date.text = ""
-            marks.text = ""
-            key.text = ""
-        }
-
-        ColumnLayout {
-            spacing: 20
-
-            TextField {
-                id: title
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                Layout.topMargin: 25
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("title")
-                font.pixelSize: 17
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-
-            TextField {
-                id: date
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("date")
-                font.pixelSize: 17
-
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-            TextField {
-                id: key
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("answer Key")
-                font.pixelSize: 17
-
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-
-            TextField {
-                id: marks
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("marks")
-                font.pixelSize: 17
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-            Rectangle {
-                width: 540
-                height: 60
-                radius: 7
-                anchors.left: parent.left
-                Button {
-                    text: "Select test"
-                    onClicked: fileDialog.open()
-                    anchors.left: parent.left
-                    anchors.leftMargin: 435
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                FileDialog {
-                    id: fileDialog
-                    title: "Select a File"
-
-                    nameFilters: ["All Files (*)"]
-                    onAccepted: {
-                        console.log("Selected file:", fileDialog.fileUrls)
-                    }
-                }
-            }
+        onQuizFormSubmitted: function (title, date, questionscount, answerkey, marks, negativemarks, filepath) {
+            console.log("add quiz signal received")
+            var response = dbhandler.addQuiz(classId, title, date,
+                                             Number(questionscount),
+                                             Number(marks),
+                                             Number(negativemarks),
+                                             answerkey, filepath)
+            console.log(`is your quiz added: ${response}`)
         }
     }
 
-    Dialog {
+    AddWhiteboard {
         id: dialog_whiteboard
-        height: 500
-        width: 600
+        visible: false
         anchors.centerIn: parent
-        title: "White Board"
-        standardButtons: Dialog.Ok | Dialog.Cancel
-        modal: true
-        signal formSubmitted2(string name, string date2)
-
-        Material.theme: Material.Light
-        Material.primary: Material.Blue
-        Material.accent: "#6C63FF"
-
-        onAccepted: {
-            console.log("emitting signal")
-            formSubmitted2(name.text, date2.text)
-            name.text = ""
-            date2.text = ""
-        }
-
-        ColumnLayout {
-            spacing: 20
-
-            TextField {
-                id: name
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                Layout.topMargin: 25
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("title")
-                font.pixelSize: 17
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-
-            TextField {
-                id: date2
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("date")
-                font.pixelSize: 17
-
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-        }
     }
 
     ColumnLayout {
@@ -597,7 +442,8 @@ Item {
     Connections {
         target: dialog_quiz
         onFormSubmitted: {
-            if (title === "" || date === "" || marks === "" || key === "") {
+            if (title === "" || date === "" || marks === ""
+                    || answerkey === "") {
                 return 0
             }
 
