@@ -11,6 +11,19 @@ Item {
 
     property int classId
 
+    function loadQuizzes() {
+        var quizzes = dbhandler.getQuizzes(classId)
+        quizModel.clear()
+        for (var i = 0; i < quizzes.length; i++) {
+            quizModel.append(quizzes[i])
+        }
+        console.log("quizzes loaded successfully!")
+    }
+
+    Component.onCompleted: function () {
+        loadQuizzes()
+    }
+
     DatabaseHandler {
         id: dbhandler
     }
@@ -35,6 +48,7 @@ Item {
                                              Number(negativemarks),
                                              answerkey, filepath)
             console.log(`is your quiz added: ${response}`)
+            loadQuizzes()
         }
     }
 
@@ -231,7 +245,7 @@ Item {
                                     height: parent.height
                                     radius: 7
                                 }
-                                property string originalText: model.title
+                                property string originalText: model.quiz_name
                                 property string truncatedText: originalText
 
                                 font.pixelSize: 15
@@ -292,7 +306,7 @@ Item {
                                         Layout.topMargin: 30
 
                                         Text {
-                                            text: model.date
+                                            text: model.taken_at
                                             font.pixelSize: 12
                                             color: "#666666"
                                             Layout.leftMargin: 23
@@ -300,7 +314,7 @@ Item {
                                         }
 
                                         Text {
-                                            text: "Max Marks: " + model.marks
+                                            text: "Max Marks: " + model.total_marks
                                             color: "#666666"
                                             font.pixelSize: 12
                                             Layout.rightMargin: 45
