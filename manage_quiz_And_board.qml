@@ -66,9 +66,10 @@ Item {
         id: dialog_whiteboard
         visible: false
         anchors.centerIn: parent
-        onWhiteboardFormSubmitted: function(name, created_at, folderpath) {
+        onWhiteboardFormSubmitted: function (name, created_at, folderpath) {
             console.log("add whiteboard signal received")
-            var response = dbhandler.addWhiteboard(classId, name, created_at, folderpath)
+            var response = dbhandler.addWhiteboard(classId, name, created_at,
+                                                   folderpath)
             console.log(`is your whiteboard added: ${response}`)
             loadWhiteboards()
         }
@@ -339,7 +340,17 @@ Item {
                                     }
                                 }
                                 onClicked: {
-                                    stackView.push("quizScreen.qml")
+                                    stackView.push("quizScreen.qml", {
+                                                       "quiz_id": model.quiz_id,
+                                                       "class_id": model.class_id,
+                                                       "quiz_name": model.quiz_name,
+                                                       "questions_count": model.questions_count,
+                                                       "total_marks": model.total_marks,
+                                                       "negative_marking": model.negative_marking,
+                                                       "answer_key": model.answer_key,
+                                                       "test_paper_img_path": model.test_paper_img_path,
+                                                       "taken_at": model.taken_at
+                                                   })
                                 }
                             }
                         }
@@ -466,36 +477,6 @@ Item {
                     }
                 }
             }
-        }
-    }
-
-    Connections {
-        target: dialog_quiz
-        onFormSubmitted: {
-            if (title === "" || date === "" || marks === ""
-                    || answerkey === "") {
-                return 0
-            }
-
-            quizModel.append({
-                                 "title": title,
-                                 "date": date,
-                                 "marks": marks,
-                                 "key": key
-                             })
-        }
-    }
-    Connections {
-        target: dialog_whiteboard
-        onFormSubmitted2: {
-            if (name === "" || date2 === "") {
-                return 0
-            }
-
-            whiteboardModel.append({
-                                       "name": name,
-                                       "date2": date2
-                                   })
         }
     }
 }

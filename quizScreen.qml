@@ -5,6 +5,16 @@ import QtQuick.Layouts
 
 Item {
 
+    property int quiz_id
+    property int class_id
+    property string quiz_name
+    property int total_marks
+    property double negative_marking
+    property int questions_count
+    property string taken_at
+    property string answer_key
+    property string test_paper_img_path
+
     Rectangle {
         id: topBar
         height: 50
@@ -79,7 +89,7 @@ Item {
             Layout.leftMargin: -30
 
             Text {
-                text: "Graded Quiz 1 | Agile Methodology"
+                text: quiz_name
                 font.pixelSize: 24
                 Layout.fillWidth: true
                 Layout.maximumWidth: parent.width
@@ -88,29 +98,17 @@ Item {
                 Layout.bottomMargin: 20
             }
 
+            // Text {
+            //     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi efficitur est vitae est vehicula cursus. Fusce sodales turpis eget porta ultricies. Nulla facilisi. Maecenas euismod purus odio, in varius justo porta quis. Nullam lobortis, ante non dignissim dictum, nibh metus aliquam nisl, at elementum lectus elit et nibh."
+            //     font.pixelSize: 16
+            //     Layout.fillWidth: true
+            //     Layout.maximumWidth: parent.width
+            //     wrapMode: Text.WordWrap
+            //     Layout.alignment: Qt.AlignJustify | Qt.AlignTop
+            //     Layout.bottomMargin: 20
+            // }
             Text {
-                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi efficitur est vitae est vehicula cursus. Fusce sodales turpis eget porta ultricies. Nulla facilisi. Maecenas euismod purus odio, in varius justo porta quis. Nullam lobortis, ante non dignissim dictum, nibh metus aliquam nisl, at elementum lectus elit et nibh."
-                font.pixelSize: 16
-                Layout.fillWidth: true
-                Layout.maximumWidth: parent.width
-                wrapMode: Text.WordWrap
-                Layout.alignment: Qt.AlignJustify | Qt.AlignTop
-                Layout.bottomMargin: 20
-            }
-
-            Text {
-                text: "Max Marks: 20"
-                font.pixelSize: 16
-                Layout.fillWidth: true
-                Layout.maximumWidth: parent.width
-                wrapMode: Text.WordWrap
-                Layout.alignment: Qt.AlignJustify | Qt.AlignTop
-                font.bold: true
-                Layout.bottomMargin: 10
-            }
-
-            Text {
-                text: "Negative Marking: -1"
+                text: `Max Marks: ${total_marks}`
                 font.pixelSize: 16
                 Layout.fillWidth: true
                 Layout.maximumWidth: parent.width
@@ -121,7 +119,18 @@ Item {
             }
 
             Text {
-                text: "Number of Questions: 20"
+                text: `Negative Marking: -${negative_marking}`
+                font.pixelSize: 16
+                Layout.fillWidth: true
+                Layout.maximumWidth: parent.width
+                wrapMode: Text.WordWrap
+                Layout.alignment: Qt.AlignJustify | Qt.AlignTop
+                font.bold: true
+                Layout.bottomMargin: 10
+            }
+
+            Text {
+                text: `Number of Questions: ${questions_count}`
                 font.pixelSize: 16
                 Layout.fillWidth: true
                 Layout.maximumWidth: parent.width
@@ -140,7 +149,7 @@ Item {
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
             Image {
-                source: "quiz.jpg"
+                source: test_paper_img_path
                 width: parent.width * 0.8
                 height: parent.height * 0.8
                 anchors.topMargin: 20
