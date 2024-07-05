@@ -149,4 +149,29 @@ Item {
             }
         }
     }
+    RowLayout {
+        anchors.fill: parent
+        anchors.margins: 20
+
+        Button {
+            Material.background: "#5D3FD3"
+            width: 80
+            height: 40
+            contentItem: Text {
+                text: qsTr("Grade")
+                color: "white"
+                font.pixelSize: 16
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+            onClicked: {
+                console.log("Grade Quize Clicked!")
+            }
+            //anchors.left: parent.Center
+            //anchors.leftMargin: 50
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+        }
+    }
 }
