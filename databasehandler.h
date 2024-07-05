@@ -15,6 +15,7 @@ public:
     Q_INVOKABLE bool addClass(const QString &className, const int &studentCount, const QString &teacherName, const QString &centerName);
     Q_INVOKABLE bool editClass(const int iD, const QString &className, const int &studentCount, const QString &teacherName, const QString &centerName);
     Q_INVOKABLE bool deleteClass(const int id);
+    Q_INVOKABLE bool addQuiz(const int &classId, const QString &title, const QString &date, const int &questionsCount, const int &totalMarks, const double &negativeMarks, const QString &answerKey, const QString &imagePath);
 
 signals:
     void classDeleted(int id);

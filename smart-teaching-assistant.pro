@@ -30,6 +30,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    AddQuiz.qml \
+    AddWhiteboard.qml \
     Addclass.qml \
     EditClass.qml \
     WhiteboardSession.qml \

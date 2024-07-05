@@ -179,7 +179,9 @@ Item {
                     MouseArea {
                         id: mouseArea
                         anchors.fill: parent
-                        onClicked: stackView.push('manage_quiz_And_board.qml')
+                        onClicked: stackView.push('manage_quiz_And_board.qml', {
+                                                      "classId": model.id
+                                                  })
                     }
 
                     ColumnLayout {

@@ -39,8 +39,11 @@ void initializeDatabase() {
                class_id INTEGER,\
                quiz_name TEXT NOT NULL,\
                total_marks INTEGER NOT NULL,\
+               questions_count INTEGER NOT NULL,\
                negative_marking REAL DEFAULT 0,\
-               created_at TEXT DEFAULT CURRENT_TIMESTAMP,\
+               answer_key TEXT NOT NULL,\
+               test_paper_img_path TEXT,\
+               taken_at TEXT DEFAULT CURRENT_TIMESTAMP,\
                FOREIGN KEY (class_id) REFERENCES classes(class_id)\
                )");
     query.exec("CREATE TABLE IF NOT EXISTS marks (\
@@ -55,14 +58,8 @@ void initializeDatabase() {
                whiteboard_id INTEGER PRIMARY KEY AUTOINCREMENT,\
                class_id INTEGER,\
                created_at TEXT DEFAULT CURRENT_TIMESTAMP,\
+               assets_path TEXT NOT NULL,\
                FOREIGN KEY (class_id) REFERENCES classes(class_id)\
-               )");
-    query.exec("CREATE TABLE whiteboard_snapshots (\
-               snapshot_id INTEGER PRIMARY KEY AUTOINCREMENT,\
-               whiteboard_id INTEGER,\
-               image_path TEXT NOT NULL,\
-               created_at TEXT DEFAULT CURRENT_TIMESTAMP,\
-               FOREIGN KEY (whiteboard_id) REFERENCES whiteboards(whiteboard_id)\
                )");
 
 }
