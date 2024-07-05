@@ -34,6 +34,7 @@ DISTFILES += \
     EditClass.qml \
     WhiteboardSession.qml \
     classesScreen.qml \
+    gradeQuiz.qml \
     manage_class.qml \
     manage_quiz_And_board.qml \
     quizScreen.qml \

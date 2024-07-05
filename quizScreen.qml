@@ -166,7 +166,8 @@ Item {
                 verticalAlignment: Text.AlignVCenter
             }
             onClicked: {
-                console.log("Grade Quize Clicked!")
+                console.log("Grade Quiz Clicked!")
+                onClicked: stackView.push("gradeQuiz.qml")
             }
             //anchors.left: parent.Center
             //anchors.leftMargin: 50
