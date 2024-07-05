@@ -83,3 +83,28 @@ bool DatabaseHandler::addQuiz(const int &classId, const QString &title, const QS
     }
     return true;
 }
+
+QVariantList DatabaseHandler::getQuizzes(const int &classId) {
+    QVariantList quizzes;
+    QSqlQuery query;
+    query.prepare("SELECT * FROM quizzes WHERE class_id = ?");
+    query.addBindValue(classId);
+    query.exec();
+    while (query.next()) {
+        qDebug() << "in while loop";
+
+        QVariantMap quiz;
+        quiz["quiz_id"] = query.value("quiz_id").toInt();
+        quiz["class_id"] = query.value("class_id").toInt();
+        quiz["quiz_name"] = query.value("quiz_name").toString();
+        quiz["total_marks"] = query.value("total_marks").toInt();
+        quiz["questions_count"] = query.value("questions_count").toInt();
+        quiz["negative_marking"] = query.value("negative_marking").toDouble();
+        quiz["answer_key"] = query.value("answer_key").toString();
+        quiz["test_paper_img_path"] = query.value("test_paper_img_path").toString();
+        quiz["taken_at"] = query.value("taken_at").toString();
+
+        quizzes.append(quiz);
+    }
+    return quizzes;
+}
