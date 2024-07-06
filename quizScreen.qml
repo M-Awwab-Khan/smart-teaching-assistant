@@ -167,12 +167,16 @@ Item {
 
 
     Rectangle {
-           anchors.horizontalCenter: parent.horizontalCenter
-           anchors.top:parent.top
-           anchors.topMargin: 640
+
+           anchors
+           {
+               top:parent.top
+               horizontalCenter:parent.horizontalCenter
+               topMargin:640
+           }
+
+
            color: "#f0f0f0"
-
-
 
            Column {
                anchors.centerIn: parent
