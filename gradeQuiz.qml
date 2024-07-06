@@ -7,11 +7,12 @@ Item {
     id: omrpage
     property string pageId: "omrpage"
     property int pNo: 1
+    property string ansKey
 
     width: parent.width
     height: parent.height
 
-    signal imageCaptured(var img, bool firstPage)
+    signal imageCaptured(var img, bool firstPage,string ansKey)
 
     Component.onCompleted: {
         videoStreamerOMR.startStream()
@@ -163,11 +164,12 @@ Item {
 
     Keys.onPressed: {
         if (event.key === Qt.Key_S) {
+            console.log(ansKey)
             var img = videoStreamerOMR.getCurrentFrame()
             if (pNo == 1) {
-                imageCaptured(img, true)
+                imageCaptured(img, true, ansKey)
             } else {
-                imageCaptured(img, false)
+                imageCaptured(img, false, ansKey)
             }
         }
     }

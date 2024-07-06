@@ -12,9 +12,10 @@ OMRmanager::OMRmanager(QObject *parent)
 {}
 
 
-void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage)
+void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const string ansKey)
 {
     qDebug() << "First Page = " << firstPage;
+    cout << ansKey << endl;
     if (imgVar.canConvert<QImage>()) {
         QImage img = imgVar.value<QImage>();
         qDebug() << img.height() << " " << img.width();
@@ -37,19 +38,6 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage)
 
 
         // cv::imwrite("temp1.png", paperCopy);
-        if (!paperCopy.isContinuous()) {
-            qDebug() << "Paper is not continuous";
-            return;
-        }
-
-        if (paperCopy.empty()) {
-            qDebug() << "Error: paperCopy is empty!";
-            return;
-        }
-        if (paperCopy.type() != CV_8UC3) {
-            qDebug() << "Error: paperCopy is not of type CV_8UC3!";
-            return;
-        }
 
         scannedImage = QImage(paperCopy.data, paperCopy.cols, paperCopy.rows, static_cast<int>(paperCopy.step), QImage::Format_RGB888).rgbSwapped();
         emit newScannedImage(scannedImage);
@@ -62,10 +50,11 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage)
 
 void OMRmanager::connectOMRPage(QObject *currentItem)
 {
+    cout << "OMRmanager\n";
     if (currentItem) {
         QVariant pageId = currentItem->property("pageId");
         if (pageId.isValid() && pageId.toString() == "omrpage") {
-            QObject::connect(currentItem, SIGNAL(imageCaptured(QVariant, bool)), this, SLOT(startOMR(QVariant, bool)));
+            QObject::connect(currentItem, SIGNAL(imageCaptured(QVariant, bool, std::string)), this, SLOT(startOMR(QVariant, bool, std::string)));
         }
     }
 }

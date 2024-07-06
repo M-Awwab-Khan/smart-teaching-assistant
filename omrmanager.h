@@ -10,6 +10,7 @@
 # include "imutils.h"
 
 
+
 class OMRmanager : public QObject
 {
     Q_OBJECT
@@ -22,7 +23,7 @@ public:
     std::vector<int> getSelectedOptions(cv::Mat& img, cv::Mat& imgCopy, bool firstPage = false);
 
 public slots:
-    void startOMR(const QVariant &imgVar, const bool firstPage);
+    void startOMR(const QVariant &imgVar, const bool firstPage, const std::string ansKey);
     void connectOMRPage(QObject* currentItem);
 
 signals:

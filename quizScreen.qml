@@ -119,7 +119,7 @@ Item {
                         // anchors.top: parent.top
                         // anchors.left: parent.left
                         onClicked: {
-                            stackView.push("gradeQuiz.qml")
+                            stackView.push("gradeQuiz.qml", {"ansKey": answer_key})
                         }
                     }
                 }
