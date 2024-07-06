@@ -80,7 +80,7 @@ Item {
 
         Rectangle {
             id: topBar
-            Layout.preferredHeight: mainwindow.height / 11
+            height: 50
             color: "#E0E0FF"
             anchors {
                 left: parent.left
@@ -90,10 +90,10 @@ Item {
 
             Button {
                 Material.background: "#5D3FD3"
-                width: (mainwindow.width / 10) + 20
-                height: (mainwindow.height / 10) - 10
+                width: 80
+                height: 40
                 contentItem: Text {
-                    text: qsTr("<- Back")
+                    text: qsTr("Back")
                     color: "white"
                     font.pixelSize: 16
                     font.bold: true
@@ -104,20 +104,10 @@ Item {
                     stackView.pop()
                 }
                 anchors.left: parent.left
-                anchors.leftMargin: 20
+                anchors.leftMargin: 50
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            Label {
-                text: "Software Engineering"
-                color: "#5D3FD3"
-                font.pixelSize: 20
-                font.bold: true
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            // profile icon
             Button {
                 background: Rectangle {
                     color: "#6C63FE"
@@ -134,6 +124,15 @@ Item {
                 }
                 anchors.right: parent.right
                 anchors.rightMargin: 50
+            }
+
+            Label {
+                text: "Software Engineering"
+                color: "#5D3FD3"
+                font.pixelSize: 20
+                font.bold: true
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
 
