@@ -18,11 +18,11 @@ QML_IMPORT_PATH =
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
 
-win32:CONFIG(release, debug|release): LIBS += -LD:/opencv/opencv/build/x64/vc16/lib/ -lopencv_world490
-else:win32:CONFIG(debug, debug|release): LIBS += -LD:/opencv/opencv/build/x64/vc16/lib/ -lopencv_world490d
+win32:CONFIG(release, debug|release): LIBS += -LC:/OpenCV/opencv/build/x64/vc16/lib/ -lopencv_world490
+else:win32:CONFIG(debug, debug|release): LIBS += -LC:/OpenCV/opencv/build/x64/vc16/lib/ -lopencv_world490d
 
-INCLUDEPATH += D:/opencv/opencv/build/include
-DEPENDPATH += D:/opencv/opencv/build/include
+INCLUDEPATH += C:/OpenCV/opencv/build/include
+DEPENDPATH += C:/OpenCV/opencv/build/include
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
