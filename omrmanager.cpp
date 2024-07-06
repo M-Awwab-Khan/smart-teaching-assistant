@@ -19,19 +19,22 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage)
         QImage img = imgVar.value<QImage>();
         qDebug() << img.height() << " " << img.width();
 
-        // cv::Mat mat(img.height(), img.width(), CV_8UC3, const_cast<uchar*>(img.bits()), img.bytesPerLine());
-        // cv::rotate(mat, mat, cv::ROTATE_90_CLOCKWISE);
-        cv::Mat temp = imread("C:/Users/DELL/Downloads/sample1.jpeg");
-        cv::Mat paper = detectPaper(temp);
+        cv::Mat mat(img.height(), img.width(), CV_8UC3, const_cast<uchar*>(img.bits()), img.bytesPerLine());
+         cv::rotate(mat, mat, cv::ROTATE_90_CLOCKWISE);
+        //cv::Mat temp = imread("C:/Users/DELL/Downloads/sample1.jpeg");
+        cv::Mat paper = detectPaper(mat);
 
         cv::Mat paperCopy = paper.clone(); // To display annotations
 
+        try {
         if(firstPage) {
             getRollNo(paper, paperCopy);
             cout << "ROll\n";
         }
 
         getSelectedOptions(paper, paperCopy, firstPage);
+
+
 
         // cv::imwrite("temp1.png", paperCopy);
         if (!paperCopy.isContinuous()) {
@@ -50,6 +53,10 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage)
 
         scannedImage = QImage(paperCopy.data, paperCopy.cols, paperCopy.rows, static_cast<int>(paperCopy.step), QImage::Format_RGB888).rgbSwapped();
         emit newScannedImage(scannedImage);
+        }
+        catch (exception& e) {
+            cerr << "Error!!!\n";
+        }
     }
 }
 
@@ -191,7 +198,7 @@ vector<vector<vector<Point>>> OMRmanager::getCircles(Mat img, Mat& imgCopy, int 
     for (int i = 0; i < sortedCircles.size(); i++) {
         for (int j = 0; j < sortedCircles[i].size(); j++) {
             putText(imgCopy, to_string(count++), Point(sortedCircles[i][j][0].x + x, sortedCircles[i][j][0].y + y), FONT_HERSHEY_COMPLEX, 0.75, Scalar(255, 0, 0), 2);
-            drawContours(imgCopy, sortedCircles[i], j, Scalar(0, 0, 255), 2, 8, {}, 2147483647, Point(x, y));
+            drawContours(imgCopy, sortedCircles[i], j, Scalar(255, 0, 0), 2, 8, {}, 2147483647, Point(x, y));
         }
     }
 
@@ -220,6 +227,7 @@ vector<int> OMRmanager::getSelectedCircles(Mat& img, vector<vector<vector<Point>
 
     for (int i = 0; i < circles.size(); i++) {
         bool found = false;
+        vector<int> options;
         //int indArray[2] = { -1, -1 };
         for (int j = 0; j < circles[i].size(); j++) {
             Mat mask = Mat::zeros(imgEdge.size(), CV_8UC1);
@@ -230,27 +238,59 @@ vector<int> OMRmanager::getSelectedCircles(Mat& img, vector<vector<vector<Point>
 
             int total = countNonZero(masked);
 
-            if (total >= 800) {
-                if (found) {
-                    found = false;
+            if(rollNo) {
+                if (total >= 800) {
+                    // if (found) {
+                    //     found = false;
+                    //     break;
+                    // }
+                    // //indArray[0] = i, indArray[1] = j;
+                    // found = true;
+                    options.push_back(j);
                     break;
+                    //k = j;
                 }
-                //indArray[0] = i, indArray[1] = j;
-                found = true;
-                k = j;
+            }
+            else {
+                if (total >= 800) {
+                    // if (found) {
+                    //     found = false;
+                    // }
+                    // //indArray[0] = i, indArray[1] = j;
+                    // found = true;
+                    options.push_back(j);
+                    //k = j;
+                }
             }
 
         }
 
-        if (found) {
-            selectedIndices.push_back(k);
-            drawContours(imgCopy, circles[i], k, Scalar(0, 255, 0), 2, 8, {}, 2147483647, Point(x, y));
+        // if (found) {
+        //     selectedIndices.push_back(k);
+        //     drawContours(imgCopy, circles[i], k, Scalar(0, 255, 0), 2, 8, {}, 2147483647, Point(x, y));
+        // }
+        // else if (rollNo) {
+        //     break;
+        // }
+        // else {
+        //     selectedIndices.push_back(-1);
+        // }
+
+        if(options.size() == 1) { // Found 1
+            selectedIndices.push_back(options[0]);
+            drawContours(imgCopy, circles[i], options[0], Scalar(0, 255, 0), 2, 8, {}, 2147483647, Point(x, y));
         }
-        else if (rollNo) {
+        else if(rollNo && options.size() == 0) {
             break;
+        }
+        else if(options.size() == 0) {
+            selectedIndices.push_back(-2);
         }
         else {
             selectedIndices.push_back(-1);
+            for(auto o: options) {
+                drawContours(imgCopy, circles[i], o, Scalar(0, 0, 255), 2, 8, {}, 2147483647, Point(x, y));
+            }
         }
     }
     return selectedIndices;

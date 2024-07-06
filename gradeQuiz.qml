@@ -17,6 +17,10 @@ Item {
         videoStreamerOMR.startStream()
     }
 
+    Component.onDestruction: {
+            videoStreamerOMR.stopStream()
+    }
+
     ColumnLayout {
         width: parent.width
         RowLayout {
