@@ -107,12 +107,13 @@ void WhiteboardManager::clearWhiteboard()
 
 void WhiteboardManager::saveSnapshot(const QString &filePath)
 {
+    qDebug() << filePath;
     QImage(whiteboard.data, whiteboard.cols, whiteboard.rows, QImage::Format_RGB888).rgbSwapped().save(filePath);
 }
 
 void WhiteboardManager::loadImage(const QString &filePath) {
     qDebug() << "image received";
-    QImage image("C:/Users/ic/Documents/whiteboard/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/snapshot1.png");
+    QImage image(filePath);
     qDebug() << image.isNull();
     if (!image.isNull()) {
         qDebug() << "image converted";

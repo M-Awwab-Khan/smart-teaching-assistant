@@ -64,3 +64,80 @@ bool DatabaseHandler::deleteClass(const int id) {
     emit classDeleted(id);
     return true;
 }
+
+QVariantList DatabaseHandler::getWhiteboards(const int &classId)
+{
+    QVariantList whiteboards;
+    QSqlQuery query;
+    query.prepare("SELECT * FROM whiteboards WHERE class_id = ?");
+    query.addBindValue(classId);
+    query.exec();
+    while (query.next()) {
+        QVariantMap whiteboard;
+        whiteboard["whiteboard_id"] = query.value("whiteboard_id").toInt();
+        whiteboard["whiteboard_name"] = query.value("whiteboard_name").toString();
+        whiteboard["created_at"] = query.value("created_at").toString();
+        whiteboard["folderpath"] = query.value("assets_path").toString();
+        whiteboards.append(whiteboard);
+    }
+    return whiteboards;
+}
+
+bool DatabaseHandler::addQuiz(const int &classId, const QString &title, const QString &date, const int &questionsCount, const int &totalMarks, const double &negativeMarks, const QString &answerKey, const QString &imagePath) {
+    QSqlQuery query;
+    query.prepare("INSERT INTO quizzes (class_id, quiz_name, total_marks, questions_count, negative_marking, answer_key, test_paper_img_path, taken_at)\
+                    VALUES (?, ?, ?, ?, ?, ?, ? , ?)");
+    query.addBindValue(classId);
+    query.addBindValue(title);
+    query.addBindValue(totalMarks);
+    query.addBindValue(questionsCount);
+    query.addBindValue(negativeMarks);
+    query.addBindValue(answerKey);
+    query.addBindValue(imagePath);
+    query.addBindValue(date);
+    if (!query.exec()) {
+        qWarning() << "Add quiz failed: " << query.lastError();
+        return false;
+    }
+    return true;
+}
+
+QVariantList DatabaseHandler::getQuizzes(const int &classId) {
+    QVariantList quizzes;
+    QSqlQuery query;
+    query.prepare("SELECT * FROM quizzes WHERE class_id = ?");
+    query.addBindValue(classId);
+    query.exec();
+    while (query.next()) {
+        qDebug() << "in while loop";
+
+        QVariantMap quiz;
+        quiz["quiz_id"] = query.value("quiz_id").toInt();
+        quiz["class_id"] = query.value("class_id").toInt();
+        quiz["quiz_name"] = query.value("quiz_name").toString();
+        quiz["total_marks"] = query.value("total_marks").toInt();
+        quiz["questions_count"] = query.value("questions_count").toInt();
+        quiz["negative_marking"] = query.value("negative_marking").toDouble();
+        quiz["answer_key"] = query.value("answer_key").toString();
+        quiz["test_paper_img_path"] = query.value("test_paper_img_path").toString();
+        quiz["taken_at"] = query.value("taken_at").toString();
+
+        quizzes.append(quiz);
+    }
+    return quizzes;
+}
+
+bool DatabaseHandler::addWhiteboard(const int &classId, const QString &whiteboardName, const QString &created_at, const QString &folderPath)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO whiteboards (class_id, whiteboard_name, created_at, assets_path) VALUES (?, ?, ?, ?)");
+    query.addBindValue(classId);
+    query.addBindValue(whiteboardName);
+    query.addBindValue(created_at);
+    query.addBindValue(folderPath);
+    if (!query.exec()) {
+        qWarning() << "Add whiteboard failed: " << query.lastError();
+        return false;
+    }
+    return true;
+}

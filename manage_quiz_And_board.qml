@@ -3,10 +3,40 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Dialogs
+import DatabaseHandler 1.0
 
 Item {
     id: mainwindow
     anchors.fill: parent
+
+    property int classId
+
+    function loadQuizzes() {
+        var quizzes = dbhandler.getQuizzes(classId)
+        quizModel.clear()
+        for (var i = 0; i < quizzes.length; i++) {
+            quizModel.append(quizzes[i])
+        }
+        console.log("quizzes loaded successfully!")
+    }
+
+    function loadWhiteboards() {
+        var whiteboards = dbhandler.getWhiteboards(classId)
+        whiteboardModel.clear()
+        for (var i = 0; i < whiteboards.length; i++) {
+            whiteboardModel.append(whiteboards[i])
+        }
+        console.log("whiteboards loaded successfully!")
+    }
+
+    Component.onCompleted: function () {
+        loadQuizzes()
+        loadWhiteboards()
+    }
+
+    DatabaseHandler {
+        id: dbhandler
+    }
 
     ListModel {
         id: quizModel
@@ -16,186 +46,32 @@ Item {
         id: whiteboardModel
     }
 
-    Dialog {
+    AddQuiz {
         id: dialog_quiz
-        height: 550
-        width: 600
+        visible: false
         anchors.centerIn: parent
-        title: "Add Quiz"
-        standardButtons: Dialog.Ok | Dialog.Cancel
-        modal: true
-        signal formSubmitted(string title, string date, int marks, string key)
-
-        Material.theme: Material.Light
-        Material.primary: Material.Blue
-        Material.accent: "#6C63FF"
-
-        onAccepted: {
-            console.log("emitting signalbasic")
-            formSubmitted(title.text, date.text, marks.text, key.text)
-            title.text = ""
-            date.text = ""
-            marks.text = ""
-            key.text = ""
-        }
-
-        ColumnLayout {
-            spacing: 20
-
-            TextField {
-                id: title
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                Layout.topMargin: 25
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("title")
-                font.pixelSize: 17
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-
-            TextField {
-                id: date
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("date")
-                font.pixelSize: 17
-
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-            TextField {
-                id: key
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("answer Key")
-                font.pixelSize: 17
-
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-
-            TextField {
-                id: marks
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("marks")
-                font.pixelSize: 17
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-            Rectangle {
-                width: 540
-                height: 60
-                radius: 7
-                anchors.left: parent.left
-                Button {
-                    text: "Select test"
-                    onClicked: fileDialog.open()
-                    anchors.left: parent.left
-                    anchors.leftMargin: 435
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                FileDialog {
-                    id: fileDialog
-                    title: "Select a File"
-
-                    nameFilters: ["All Files (*)"]
-                    onAccepted: {
-                        console.log("Selected file:", fileDialog.fileUrls)
-                    }
-                }
-            }
+        onQuizFormSubmitted: function (title, date, questionscount, answerkey, marks, negativemarks, filepath) {
+            console.log("add quiz signal received")
+            var response = dbhandler.addQuiz(classId, title, date,
+                                             Number(questionscount),
+                                             Number(marks),
+                                             Number(negativemarks),
+                                             answerkey, filepath)
+            console.log(`is your quiz added: ${response}`)
+            loadQuizzes()
         }
     }
 
-    Dialog {
+    AddWhiteboard {
         id: dialog_whiteboard
-        height: 500
-        width: 600
+        visible: false
         anchors.centerIn: parent
-        title: "White Board"
-        standardButtons: Dialog.Ok | Dialog.Cancel
-        modal: true
-        signal formSubmitted2(string name, string date2)
-
-        Material.theme: Material.Light
-        Material.primary: Material.Blue
-        Material.accent: "#6C63FF"
-
-        onAccepted: {
-            console.log("emitting signal")
-            formSubmitted2(name.text, date2.text)
-            name.text = ""
-            date2.text = ""
-        }
-
-        ColumnLayout {
-            spacing: 20
-
-            TextField {
-                id: name
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                Layout.topMargin: 25
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("title")
-                font.pixelSize: 17
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
-
-            TextField {
-                id: date2
-                Layout.preferredWidth: parent.width / 2 + 270
-                Layout.preferredHeight: 60
-                leftPadding: 20
-                color: "black"
-                placeholderText: qsTr("date")
-                font.pixelSize: 17
-
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Down) {
-                        moveFocusDown()
-                    } else if (event.key === Qt.Key_Up) {
-                        moveFocusUp()
-                    }
-                }
-            }
+        onWhiteboardFormSubmitted: function (name, created_at, folderpath) {
+            console.log("add whiteboard signal received")
+            var response = dbhandler.addWhiteboard(classId, name, created_at,
+                                                   folderpath)
+            console.log(`is your whiteboard added: ${response}`)
+            loadWhiteboards()
         }
     }
 
@@ -204,7 +80,7 @@ Item {
 
         Rectangle {
             id: topBar
-            Layout.preferredHeight: mainwindow.height / 11
+            height: 50
             color: "#E0E0FF"
             anchors {
                 left: parent.left
@@ -214,10 +90,10 @@ Item {
 
             Button {
                 Material.background: "#5D3FD3"
-                width: (mainwindow.width / 10) + 20
-                height: (mainwindow.height / 10) - 10
+                width: 80
+                height: 40
                 contentItem: Text {
-                    text: qsTr("<- Back")
+                    text: qsTr("Back")
                     color: "white"
                     font.pixelSize: 16
                     font.bold: true
@@ -228,20 +104,10 @@ Item {
                     stackView.pop()
                 }
                 anchors.left: parent.left
-                anchors.leftMargin: 20
+                anchors.leftMargin: 50
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            Label {
-                text: "Software Engineering"
-                color: "#5D3FD3"
-                font.pixelSize: 20
-                font.bold: true
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            // profile icon
             Button {
                 background: Rectangle {
                     color: "#6C63FE"
@@ -258,6 +124,15 @@ Item {
                 }
                 anchors.right: parent.right
                 anchors.rightMargin: 50
+            }
+
+            Label {
+                text: "Software Engineering"
+                color: "#5D3FD3"
+                font.pixelSize: 20
+                font.bold: true
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
 
@@ -386,7 +261,7 @@ Item {
                                     height: parent.height
                                     radius: 7
                                 }
-                                property string originalText: model.title
+                                property string originalText: model.quiz_name
                                 property string truncatedText: originalText
 
                                 font.pixelSize: 15
@@ -447,7 +322,7 @@ Item {
                                         Layout.topMargin: 30
 
                                         Text {
-                                            text: model.date
+                                            text: model.taken_at
                                             font.pixelSize: 12
                                             color: "#666666"
                                             Layout.leftMargin: 23
@@ -455,7 +330,7 @@ Item {
                                         }
 
                                         Text {
-                                            text: "Max Marks: " + model.marks
+                                            text: "Max Marks: " + model.total_marks
                                             color: "#666666"
                                             font.pixelSize: 12
                                             Layout.rightMargin: 45
@@ -464,7 +339,17 @@ Item {
                                     }
                                 }
                                 onClicked: {
-                                    stackView.push("quizScreen.qml")
+                                    stackView.push("quizScreen.qml", {
+                                                       "quiz_id": model.quiz_id,
+                                                       "class_id": model.class_id,
+                                                       "quiz_name": model.quiz_name,
+                                                       "questions_count": model.questions_count,
+                                                       "total_marks": model.total_marks,
+                                                       "negative_marking": model.negative_marking,
+                                                       "answer_key": model.answer_key,
+                                                       "test_paper_img_path": model.test_paper_img_path,
+                                                       "taken_at": model.taken_at
+                                                   })
                                 }
                             }
                         }
@@ -495,7 +380,7 @@ Item {
                                     height: parent.height
                                     radius: 7
                                 }
-                                property string originalText: model.name
+                                property string originalText: model.whiteboard_name
                                 property string truncatedText: originalText
                                 font.pixelSize: 15
                                 contentItem: Text {
@@ -560,7 +445,10 @@ Item {
 
                                     onClicked: function () {
                                         console.log("launch whiteboard")
-                                        stackView.push('WhiteboardSession.qml')
+                                        stackView.push('WhiteboardSession.qml',
+                                                       {
+                                                           "folderpath": model.folderpath
+                                                       })
                                     }
                                 }
 
@@ -575,7 +463,7 @@ Item {
                                         Layout.topMargin: 30
 
                                         Text {
-                                            text: model.date2
+                                            text: model.created_at
                                             font.pixelSize: 12
                                             color: "#666666"
                                             Layout.leftMargin: 23
@@ -591,35 +479,6 @@ Item {
                     }
                 }
             }
-        }
-    }
-
-    Connections {
-        target: dialog_quiz
-        onFormSubmitted: {
-            if (title === "" || date === "" || marks === "" || key === "") {
-                return 0
-            }
-
-            quizModel.append({
-                                 "title": title,
-                                 "date": date,
-                                 "marks": marks,
-                                 "key": key
-                             })
-        }
-    }
-    Connections {
-        target: dialog_whiteboard
-        onFormSubmitted2: {
-            if (name === "" || date2 === "") {
-                return 0
-            }
-
-            whiteboardModel.append({
-                                       "name": name,
-                                       "date2": date2
-                                   })
         }
     }
 }
