@@ -18,9 +18,8 @@ Dialog {
     Material.accent: "#6C63FF"
 
     function submitForm() {
-        if (title.text && date.text && questionscount.text &&
-            answerkey.text && marks.text && negativemarks.text &&
-            filepath.text) {
+        if (title.text && date.text && questionscount.text && answerkey.text
+                && marks.text && negativemarks.text && filepath.text) {
             console.log("emitting signalbasic")
             quizFormSubmitted(title.text, date.text, questionscount.text,
                               answerkey.text, marks.text, negativemarks.text,
@@ -36,7 +35,7 @@ Dialog {
         }
     }
 
-    onAccepted: submitForm
+    onAccepted: submitForm()
 
     ColumnLayout {
         spacing: 20
@@ -53,9 +52,9 @@ Dialog {
             Keys.onReturnPressed: date.focus = true
             Keys.onPressed: {
                 if (event.key === Qt.Key_Down) {
-                    date.focus = true;
+                    date.focus = true
                 } else if (event.key === Qt.Key_Right) {
-                    date.focus = true;
+                    date.focus = true
                 }
             }
         }
@@ -75,11 +74,11 @@ Dialog {
                 Keys.onReturnPressed: questionscount.focus = true
                 Keys.onPressed: {
                     if (event.key === Qt.Key_Up) {
-                        title.focus = true;
+                        title.focus = true
                     } else if (event.key === Qt.Key_Down) {
-                        questionscount.focus = true;
+                        questionscount.focus = true
                     } else if (event.key === Qt.Key_Right) {
-                        questionscount.focus = true;
+                        questionscount.focus = true
                     }
                 }
             }
@@ -94,11 +93,11 @@ Dialog {
                 Keys.onReturnPressed: answerkey.focus = true
                 Keys.onPressed: {
                     if (event.key === Qt.Key_Up) {
-                        date.focus = true;
+                        date.focus = true
                     } else if (event.key === Qt.Key_Down) {
-                        answerkey.focus = true;
+                        answerkey.focus = true
                     } else if (event.key === Qt.Key_Left) {
-                        date.focus = true;
+                        date.focus = true
                     }
                 }
             }
@@ -115,13 +114,13 @@ Dialog {
             Keys.onReturnPressed: marks.focus = true
             Keys.onPressed: {
                 if (event.key === Qt.Key_Up) {
-                    questionscount.focus = true;
+                    questionscount.focus = true
                 } else if (event.key === Qt.Key_Down) {
-                    marks.focus = true;
+                    marks.focus = true
                 } else if (event.key === Qt.Key_Left) {
-                    questionscount.focus = true;
+                    questionscount.focus = true
                 } else if (event.key === Qt.Key_Right) {
-                    marks.focus = true;
+                    marks.focus = true
                 }
             }
         }
@@ -145,13 +144,13 @@ Dialog {
                 Keys.onReturnPressed: negativemarks.focus = true
                 Keys.onPressed: {
                     if (event.key === Qt.Key_Up) {
-                        answerkey.focus = true;
+                        answerkey.focus = true
                     } else if (event.key === Qt.Key_Down) {
-                        negativemarks.focus = true;
+                        negativemarks.focus = true
                     } else if (event.key === Qt.Key_Left) {
-                        answerkey.focus = true;
+                        answerkey.focus = true
                     } else if (event.key === Qt.Key_Right) {
-                        negativemarks.focus = true;
+                        negativemarks.focus = true
                     }
                 }
             }
@@ -170,11 +169,11 @@ Dialog {
                 Keys.onReturnPressed: fileButton.focus = true
                 Keys.onPressed: {
                     if (event.key === Qt.Key_Up) {
-                        marks.focus = true;
+                        marks.focus = true
                     } else if (event.key === Qt.Key_Down) {
-                        fileButton.focus = true;
+                        fileButton.focus = true
                     } else if (event.key === Qt.Key_Left) {
-                        marks.focus = true;
+                        marks.focus = true
                     }
                 }
             }
@@ -194,9 +193,9 @@ Dialog {
                 Keys.onReturnPressed: submitForm()
                 Keys.onPressed: {
                     if (event.key === Qt.Key_Up) {
-                        negativemarks.focus = true;
+                        negativemarks.focus = true
                     } else if (event.key === Qt.Key_Left) {
-                        negativemarks.focus = true;
+                        negativemarks.focus = true
                     }
                 }
             }
