@@ -5,20 +5,16 @@ import QtQuick.Layouts
 
 Item {
 
-    ScrollView {
-        id: scroller
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.leftMargin: 5
-        anchors.topMargin: 5
-        width: parent.width
-        height: parent.height
-        clip : true
-        ScrollBar.horizontal.policy: ScrollBar.AlwaysOn
-        ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+    ScrollView
+    {
+        anchors.fill: parent
+        contentHeight: 800
+
+
     Rectangle {
         id: topBar
         height: 50
+        width: parent.width
         color: "#E0E0FF"
         anchors {
             left: parent.left
@@ -145,7 +141,8 @@ Item {
         Rectangle {
             anchors.top: topBar.bottom
             Layout.preferredWidth: parent.width / 2
-            Layout.preferredHeight: paernt.height
+
+            Layout.preferredHeight: 50
             Layout.fillHeight: true
             color: "transparent"
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
@@ -154,17 +151,12 @@ Item {
                 source: "quiz.jpg"
                 width: parent.width * 0.8
                 height: parent.height * 0.8
-                anchors.topMargin: 20
+                anchors.topMargin: -100
                 anchors.centerIn: parent
                 fillMode: Image.PreserveAspectFit
             }
         }
     }
-
-
-
-
-
 
     Rectangle {
 
@@ -172,7 +164,7 @@ Item {
            {
                top:parent.top
                horizontalCenter:parent.horizontalCenter
-               topMargin:640
+               topMargin:600
            }
 
 
@@ -266,6 +258,9 @@ Item {
                        ListElement { rollNo: "001"; correct: 18; wrong: 2; notAttempted: 0; obtainedMarks: 16.0 }
                        ListElement { rollNo: "002"; correct: 17; wrong: 1; notAttempted: 2; obtainedMarks: 16.0 }
                        ListElement { rollNo: "003"; correct: 20; wrong: 0; notAttempted: 0; obtainedMarks: 20.0 }
+                       ListElement { rollNo: "001"; correct: 18; wrong: 2; notAttempted: 0; obtainedMarks: 16.0 }
+                       ListElement { rollNo: "002"; correct: 17; wrong: 1; notAttempted: 2; obtainedMarks: 16.0 }
+                       ListElement { rollNo: "003"; correct: 20; wrong: 0; notAttempted: 0; obtainedMarks: 200.0 }
                    }
 
                    delegate: Row {
