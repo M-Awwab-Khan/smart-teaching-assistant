@@ -6,6 +6,7 @@
 #include <QImage>
 #include <QDebug>
 #include <opencv2/opencv.hpp>
+# include <QVariantMap>
 # include <vector>
 # include "imutils.h"
 
@@ -21,6 +22,8 @@ public:
     std::vector<int> getSelectedCircles(cv::Mat& img, std::vector<std::vector<std::vector<cv::Point>>>& circles, cv::Mat& imgCopy, int x, int y, bool rollNo = false);
     int getRollNo(cv::Mat& img, cv::Mat& imgCopy);
     std::vector<int> getSelectedOptions(cv::Mat& img, cv::Mat& imgCopy, bool firstPage = false);
+    Q_INVOKABLE QVariantMap returnGrade();
+    Q_INVOKABLE void retry();
 
 public slots:
     void startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey);
@@ -31,6 +34,10 @@ signals:
 
 private:
     QImage scannedImage;
+    QVariantMap result;
+    std::vector<int> resultVector;
+    QString ansKey;
+    int rollNo;
 };
 
 #endif // OMRMANAGER_H

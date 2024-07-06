@@ -14,6 +14,7 @@ OMRmanager::OMRmanager(QObject *parent)
 
 void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey)
 {
+    this->ansKey = ansKey;
     qDebug() << "First Page = " << firstPage;
     qDebug() << ansKey;
     if (imgVar.canConvert<QImage>()) {
@@ -29,11 +30,12 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QS
 
         try {
         if(firstPage) {
-            getRollNo(paper, paperCopy);
-            cout << "ROll\n";
+            this->rollNo = getRollNo(paper, paperCopy);
+            cout << "ROll: " << this->rollNo << endl;
         }
 
-        getSelectedOptions(paper, paperCopy, firstPage);
+        vector<int> temp = getSelectedOptions(paper, paperCopy, firstPage);
+        resultVector.insert(resultVector.end(), temp.begin(), temp.end());
 
 
 
@@ -399,5 +401,49 @@ vector<int> OMRmanager::getSelectedOptions(Mat& img, Mat& imgCopy, bool firstPag
     selectedOptions.insert(selectedOptions.end(), temp.begin(), temp.end());
 
     return selectedOptions;
+}
+
+QVariantMap OMRmanager::returnGrade()
+{
+    result.insert("rollNo", rollNo);
+    result.insert("unattempted", 0);
+    result.insert("correct", 0);
+    result.insert("wrong", 0);
+    //result.insert("negative", 0);
+    result.insert("obtained", 0);
+    string temp = "ABCD";
+    int qNo = 0;
+    for(auto i: resultVector) {
+        if(i == -1) {
+            result["wrong"] = result["wrong"].toInt()+1;
+        }
+        else if(i == -2) {
+            result["unattempted"] = result["unattempted"].toInt()+1;
+        }
+        else {
+            if(temp[i] == ansKey[qNo]) {
+                result["correct"] = result["correct"].toInt()+1;
+            }
+            else {
+                result["wrong"] = result["wrong"].toInt()+1;
+            }
+        }
+        qNo += 1;
+    }
+    int negativeMark = 1;
+    result["obtained"] = result["correct"].toInt() - result["wrong"].toInt()*negativeMark;
+    if(result["obtained"].toInt() < 0) {
+        result["obtained"] = 0;
+    }
+    resultVector.clear();
+    for (auto it = result.begin(); it != result.end(); ++it) {
+        qDebug() << it.key() << ":" << it.value().toInt();
+    }
+    return result;
+}
+
+void OMRmanager::retry()
+{
+    resultVector.clear();
 }
 

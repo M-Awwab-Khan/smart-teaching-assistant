@@ -80,7 +80,9 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
+                    pNo = 1
                     console.log("Retry Clicked!")
+                    omrManager.retry()
                 }
                 enabled: false
             }
@@ -99,7 +101,7 @@ Item {
                 }
                 onClicked: {
                     console.log("Submit Grade Clicked!")
-                    retryButton.enabled = false
+                    omrManager.returnGrade()
                     pNo = 1
                 }
             }
@@ -147,6 +149,8 @@ Item {
             }
         }
     }
+
+
 
     Connections {
         target: OMRImageProvider
