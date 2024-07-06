@@ -16,12 +16,18 @@ Dialog {
     Material.primary: Material.Blue
     Material.accent: "#6C63FF"
 
-    onAccepted: {
-        console.log("emitting signal")
-        whiteboardFormSubmitted(name.text, created_at.text, folderpath.text)
-        name.text = ""
-        created_at.text = ""
+    function submitForm() {
+        if (name.text && created_at.text && folderpath.text) {
+            console.log("emitting signal")
+            whiteboardFormSubmitted(name.text, created_at.text, folderpath.text)
+            name.text = ""
+            created_at.text = ""
+            folderpath.text = ""
+            close() // Close the dialog
+        }
     }
+
+    onAccepted: submitForm()
 
     ColumnLayout {
         spacing: 20
@@ -35,6 +41,12 @@ Dialog {
             color: "black"
             placeholderText: qsTr("Give a Title")
             font.pixelSize: 17
+            Keys.onReturnPressed: created_at.focus = true
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Down) {
+                    created_at.focus = true;
+                }
+            }
         }
 
         TextField {
@@ -45,7 +57,16 @@ Dialog {
             color: "black"
             placeholderText: qsTr("Enter Date")
             font.pixelSize: 17
-
+            Keys.onReturnPressed: folderButton.focus = true
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Up) {
+                    name.focus = true;
+                } else if (event.key === Qt.Key_Down) {
+                    folderButton.focus = true;
+                } else if (event.key === Qt.Key_Left) {
+                    name.focus = true;
+                }
+            }
         }
 
         Rectangle {
@@ -54,10 +75,19 @@ Dialog {
             radius: 7
             anchors.left: parent.left
             Button {
+                id: folderButton
                 text: "Select Folder"
                 onClicked: folderdialog.open()
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
+                Keys.onReturnPressed: submitForm()
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Up) {
+                        created_at.focus = true;
+                    } else if (event.key === Qt.Key_Left) {
+                        created_at.focus = true;
+                    }
+                }
             }
 
             FolderDialog {
@@ -67,6 +97,7 @@ Dialog {
                 onAccepted: {
                     console.log("Selected Folder:", folderdialog.selectedFolder)
                     folderpath.text = folderdialog.selectedFolder
+                    folderButton.focus = true
                 }
             }
 
