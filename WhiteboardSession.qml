@@ -155,7 +155,6 @@ Item {
                 anchors.centerIn: parent
                 source: "image://whiteboard/image"
                 cache: false
-
                 function reload() {
                     source = "image://whiteboard/image?id=" + Date.now()
                 }
