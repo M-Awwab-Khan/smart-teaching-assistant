@@ -13,7 +13,7 @@ VideoStreamer::~VideoStreamer()
 }
 
 void VideoStreamer::startStream(){
-    cap.open(0);
+    cap.open(1);
     double fps = cap.get(cv::CAP_PROP_FPS);
 
     tUpdate.start(1000/fps);
