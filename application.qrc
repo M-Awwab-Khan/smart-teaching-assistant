@@ -13,10 +13,8 @@
         <file>quiz.jpg</file>
         <file>WhiteboardSession.qml</file>
         <file>gradeQuiz.qml</file>
-
         <file>AddQuiz.qml</file>
         <file>AddWhiteboard.qml</file>
-
     </qresource>
     <qresource prefix="/"/>
 </RCC>

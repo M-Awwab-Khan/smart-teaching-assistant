@@ -3,10 +3,12 @@ QT += quick sql
 SOURCES += \
         databasehandler.cpp \
         main.cpp \
+        omrmanager.cpp \
         opencvimageprovider.cpp \
         videostreamer.cpp \
         whiteboardmanager.cpp \
-        omrmanager.cpp
+        omrmanager.cpp \
+        imutils.cpp
 
 resources.files = main.qml 
 resources.prefix = /$${TARGET}
@@ -46,7 +48,9 @@ DISTFILES += \
 
 HEADERS += \
     databasehandler.h \
+    omrmanager.h \
     opencvimageprovider.h \
     videostreamer.h \
     whiteboardmanager.h \
-    omrmanager.h
+    omrmanager.h \
+    imutils.h
