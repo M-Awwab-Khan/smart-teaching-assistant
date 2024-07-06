@@ -446,7 +446,10 @@ Item {
 
                                     onClicked: function () {
                                         console.log("launch whiteboard")
-                                        stackView.push('WhiteboardSession.qml')
+                                        stackView.push('WhiteboardSession.qml',
+                                                       {
+                                                           "folderpath": model.folderpath
+                                                       })
                                     }
                                 }
 
