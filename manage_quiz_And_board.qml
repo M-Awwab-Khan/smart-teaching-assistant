@@ -10,6 +10,7 @@ Item {
     anchors.fill: parent
 
     property int classId
+    property string className
 
     function loadQuizzes() {
         var quizzes = dbhandler.getQuizzes(classId)
@@ -78,62 +79,9 @@ Item {
     ColumnLayout {
         anchors.fill: parent
 
-        Rectangle {
+        TitleBar {
+            title: className
             id: topBar
-            height: 50
-            color: "#E0E0FF"
-            anchors {
-                left: parent.left
-                top: parent.top
-                right: parent.right
-            }
-
-            Button {
-                Material.background: "#5D3FD3"
-                width: 80
-                height: 40
-                contentItem: Text {
-                    text: qsTr("Back")
-                    color: "white"
-                    font.pixelSize: 16
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
-                onClicked: {
-                    stackView.pop()
-                }
-                anchors.left: parent.left
-                anchors.leftMargin: 50
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            Button {
-                background: Rectangle {
-                    color: "#6C63FE"
-                    radius: 10
-                }
-                height: 50
-                width: 50
-                Image {
-                    source: "https://static-00.iconduck.com/assets.00/avatar-icon-256x256-lc2hm878.png"
-                    width: 25
-                    height: 25
-                    fillMode: Image.PreserveAspectFit
-                    anchors.centerIn: parent
-                }
-                anchors.right: parent.right
-                anchors.rightMargin: 50
-            }
-
-            Label {
-                text: "Software Engineering"
-                color: "#5D3FD3"
-                font.pixelSize: 20
-                font.bold: true
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
         }
 
         Rectangle {
@@ -341,6 +289,7 @@ Item {
                                 onClicked: {
                                     stackView.push("quizScreen.qml", {
                                                        "quiz_id": model.quiz_id,
+                                                       "class_name": className,
                                                        "class_id": model.class_id,
                                                        "quiz_name": model.quiz_name,
                                                        "questions_count": model.questions_count,
