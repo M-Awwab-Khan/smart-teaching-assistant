@@ -12,10 +12,10 @@ OMRmanager::OMRmanager(QObject *parent)
 {}
 
 
-void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const string ansKey)
+void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey)
 {
     qDebug() << "First Page = " << firstPage;
-    cout << ansKey << endl;
+    qDebug() << ansKey;
     if (imgVar.canConvert<QImage>()) {
         QImage img = imgVar.value<QImage>();
         qDebug() << img.height() << " " << img.width();
@@ -50,11 +50,11 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const st
 
 void OMRmanager::connectOMRPage(QObject *currentItem)
 {
-    cout << "OMRmanager\n";
+    qDebug() << "OMRmanager\n";
     if (currentItem) {
         QVariant pageId = currentItem->property("pageId");
         if (pageId.isValid() && pageId.toString() == "omrpage") {
-            QObject::connect(currentItem, SIGNAL(imageCaptured(QVariant, bool, std::string)), this, SLOT(startOMR(QVariant, bool, std::string)));
+            QObject::connect(currentItem, SIGNAL(imageCaptured(QVariant, bool, QString)), this, SLOT(startOMR(QVariant, bool, QString)));
         }
     }
 }

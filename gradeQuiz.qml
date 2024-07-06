@@ -12,7 +12,7 @@ Item {
     width: parent.width
     height: parent.height
 
-    signal imageCaptured(var img, bool firstPage,string ansKey)
+    signal imageCaptured(var img, bool firstPage, string ansKey)
 
     Component.onCompleted: {
         videoStreamerOMR.startStream()
