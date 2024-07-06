@@ -6,7 +6,9 @@ SOURCES += \
         omrmanager.cpp \
         opencvimageprovider.cpp \
         videostreamer.cpp \
-        whiteboardmanager.cpp
+        whiteboardmanager.cpp \
+        omrmanager.cpp \
+        imutils.cpp
 
 resources.files = main.qml 
 resources.prefix = /$${TARGET}
@@ -49,4 +51,6 @@ HEADERS += \
     omrmanager.h \
     opencvimageprovider.h \
     videostreamer.h \
-    whiteboardmanager.h
+    whiteboardmanager.h \
+    omrmanager.h \
+    imutils.h
