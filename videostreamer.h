@@ -19,6 +19,7 @@ public:
     void streamVideo();
     Q_INVOKABLE void startStream();
     Q_INVOKABLE void stopStream();
+    Q_INVOKABLE QImage getCurrentFrame() const;
 
 private:
     cv::Mat frame;

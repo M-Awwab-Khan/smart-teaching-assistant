@@ -24,6 +24,12 @@ void VideoStreamer::stopStream() {
     tUpdate.stop();
 }
 
+QImage VideoStreamer::getCurrentFrame() const
+{
+    return QImage(frame.data, frame.cols, frame.rows, QImage::Format_RGB888).rgbSwapped();
+
+}
+
 void VideoStreamer::streamVideo()
 {
     cap>>frame;

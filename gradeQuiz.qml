@@ -4,71 +4,103 @@ import QtQuick.Controls.Material
 import QtQuick.Layouts
 
 Item {
-    RowLayout {
+    id: omrpage
+    property string pageId: "omrpage"
 
-        spacing: parent.width / 3
-        Button {
-            Material.background: "#5D3FD3"
-            width: 80
-            height: 40
-            contentItem: Text {
-                text: qsTr("Next Page")
-                color: "white"
-                font.pixelSize: 16
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+    width: parent.width
+    height: parent.height
+
+    signal imageCaptured(var img)
+
+    Component.onCompleted: {
+        videoStreamerOMR.startStream()
+    }
+
+    ColumnLayout {
+        RowLayout {
+            width: parent.width
+            spacing: parent.width / 3
+
+            Button {
+                Material.background: "#5D3FD3"
+                width: 80
+                height: 40
+                contentItem: Text {
+                    text: qsTr("Next Page")
+                    color: "white"
+                    font.pixelSize: 16
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                onClicked: {
+                    console.log("Next Page Clicked!")
+                }
+                Layout.alignment: Qt.AlignLeft
             }
-            onClicked: {
-                console.log("Next Page Clicked!")
+
+            Button {
+                Material.background: "#5D3FD3"
+                width: 80
+                height: 40
+                contentItem: Text {
+                    text: qsTr("Retry")
+                    color: "white"
+                    font.pixelSize: 16
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                onClicked: {
+                    console.log("Retry Clicked!")
+                }
+                enabled: false
+                Layout.alignment: Qt.AlignRight
             }
-            //anchors.left: parent.Center
-            //anchors.leftMargin: 50
-            //anchors.verticalCenter: parent.verticalCenter
-            anchors.top: parent.top
+
+            Button {
+                Material.background: "#5D3FD3"
+                width: 80
+                height: 40
+                contentItem: Text {
+                    text: qsTr("Submit Grade")
+                    color: "white"
+                    font.pixelSize: 16
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                onClicked: {
+                    console.log("Submit Grade Clicked!")
+                }
+                Layout.alignment: Qt.AlignHCenter
+            }
         }
 
-        Button {
-            Material.background: "#5D3FD3"
-            width: 80
-            height: 40
-            contentItem: Text {
-                text: qsTr("Retry")
-                color: "white"
-                font.pixelSize: 16
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
-            onClicked: {
-                console.log("Next Page Clicked!")
-            }
-            //anchors.left: parent.Center
-            //anchors.leftMargin: 50
-            //anchors.verticalCenter: parent.verticalCenter
-            anchors.top: parent.top
-            enabled: false
-        }
+        Image {
+            id: omrSpace
+            fillMode: Image.PreserveAspectFit
+            source: "image://omr/image"
+            cache: false
+            anchors.centerIn: parent
 
-        Button {
-            Material.background: "#5D3FD3"
-            width: 80
-            height: 40
-            contentItem: Text {
-                text: qsTr("Submit Grade")
-                color: "white"
-                font.pixelSize: 16
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+            function reload() {
+                source = "image://omr/image?id=" + Date.now()
             }
-            onClicked: {
-                console.log("Submit Grade! Clicked!")
-            }
-            //anchors.left: parent.Center
-            //anchors.leftMargin: 50
-            //anchors.verticalCenter: parent.verticalCenter
-            anchors.top: parent.top
+        }
+    }
+
+    Connections {
+        target: OMRImageProvider
+        function onImageChanged() {
+            omrSpace.reload()
+        }
+    }
+
+    Keys.onPressed: {
+        if (event.key === Qt.Key_S) {
+            var img = videoStreamerOMR.getCurrentFrame()
+            imageCaptured(img)
         }
     }
 }

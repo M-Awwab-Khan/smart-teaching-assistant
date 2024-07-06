@@ -8,6 +8,7 @@
 #include "opencvimageprovider.h"
 #include "videostreamer.h"
 #include "whiteboardmanager.h"
+#include "omrmanager.h"
 
 
 void initializeDatabase() {
@@ -75,17 +76,24 @@ int main(int argc, char *argv[])
     qmlRegisterType<DatabaseHandler>("DatabaseHandler", 1, 0, "DatabaseHandler");
 
     VideoStreamer videoStreamer;
+    VideoStreamer videoStreamerOMR;
     WhiteboardManager whiteboardManager;
+    OMRmanager omrManager;
 
     QQmlApplicationEngine engine;
 
     OpenCVImageProvider *whiteboardImageProvider(new OpenCVImageProvider);
+    OpenCVImageProvider *OMRImageProvider(new OpenCVImageProvider);
 
     engine.rootContext()->setContextProperty("whiteboardImageProvider", whiteboardImageProvider);
+    engine.rootContext()->setContextProperty("OMRImageProvider", OMRImageProvider);
     engine.rootContext()->setContextProperty("videoStreamer", &videoStreamer);
+    engine.rootContext()->setContextProperty("videoStreamerOMR", &videoStreamerOMR);
     engine.rootContext()->setContextProperty("whiteboardManager", &whiteboardManager);
+    engine.rootContext()->setContextProperty("omrManager", &omrManager);
 
     engine.addImageProvider("whiteboard", whiteboardImageProvider);
+    engine.addImageProvider("omr", OMRImageProvider);
 
 
     const QUrl url(QStringLiteral("qrc:/smart-teaching-assistant/main.qml"));
@@ -100,8 +108,12 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
     engine.load(url);
 
+    QObject::connect(&videoStreamerOMR, &VideoStreamer::newImage,  OMRImageProvider, &OpenCVImageProvider::updateImage);
     QObject::connect(&videoStreamer, &VideoStreamer::newImage, &whiteboardManager, &WhiteboardManager::processFrame);
     QObject::connect(&whiteboardManager, &WhiteboardManager::newWeightedImage, whiteboardImageProvider, &OpenCVImageProvider::updateImage);
+
+    // QObject *rootObject = engine.rootObjects().first();
+    // QObject::connect(rootObject, SIGNAL(imageCaptured(QVariant)), &omrManager, SLOT(startOMR(QVariant)));
 
     return app.exec();
 }

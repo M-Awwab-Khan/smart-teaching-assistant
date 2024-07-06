@@ -3,7 +3,6 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-
 Window {
     id: root
     width: 1100
@@ -18,6 +17,9 @@ Window {
         id: stackView
         initialItem: "welcomeScreen.qml"
         anchors.fill: parent
-    }
 
+        onCurrentItemChanged: {
+            omrManager.connectOMRPage(currentItem)
+        }
+    }
 }
