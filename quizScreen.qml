@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import DatabaseHandler 1.0
 
 Item {
     id: root
@@ -18,6 +19,22 @@ Item {
     property string taken_at
     property string answer_key
     property string test_paper_img_path
+
+    function loadMarks() {
+        var marks = dbhandler.getMarks(quiz_id, class_id)
+        console.log(marks.length)
+        marksModel.clear()
+        for (var i = 0; i < marks.length; i++) {
+            marksModel.append(marks[i])
+        }
+        console.log("Successfully loaded marks")
+    }
+
+    Component.onCompleted: loadMarks()
+
+    DatabaseHandler {
+        id: dbhandler
+    }
 
     ScrollView {
         contentHeight: 1200
@@ -119,7 +136,11 @@ Item {
                         // anchors.top: parent.top
                         // anchors.left: parent.left
                         onClicked: {
-                            stackView.push("gradeQuiz.qml", {"ansKey": answer_key})
+                            stackView.push("gradeQuiz.qml", {
+                                               "ansKey": answer_key,
+                                               "quizId": quiz_id,
+                                               "classId": class_id
+                                           })
                         }
                     }
                 }
@@ -244,55 +265,16 @@ Item {
                     }
                 }
 
+                ListModel {
+                    id: marksModel
+                }
+
                 // Data Rows
                 ListView {
                     width: 540
                     height: 200
                     spacing: 0
-                    model: ListModel {
-                        ListElement {
-                            rollNo: "001"
-                            correct: 18
-                            wrong: 2
-                            notAttempted: 0
-                            obtainedMarks: 16.0
-                        }
-                        ListElement {
-                            rollNo: "002"
-                            correct: 17
-                            wrong: 1
-                            notAttempted: 2
-                            obtainedMarks: 16.0
-                        }
-                        ListElement {
-                            rollNo: "003"
-                            correct: 20
-                            wrong: 0
-                            notAttempted: 0
-                            obtainedMarks: 20.0
-                        }
-                        ListElement {
-                            rollNo: "001"
-                            correct: 18
-                            wrong: 2
-                            notAttempted: 0
-                            obtainedMarks: 16.0
-                        }
-                        ListElement {
-                            rollNo: "002"
-                            correct: 17
-                            wrong: 1
-                            notAttempted: 2
-                            obtainedMarks: 16.0
-                        }
-                        ListElement {
-                            rollNo: "003"
-                            correct: 20
-                            wrong: 0
-                            notAttempted: 0
-                            obtainedMarks: 200.0
-                        }
-                    }
+                    model: marksModel
 
                     delegate: Row {
                         spacing: 0

@@ -171,3 +171,24 @@ bool DatabaseHandler::uploadQuizMarks(const int &quizId, const int &classId, con
     }
     return true;
 }
+
+QVariantList DatabaseHandler::getMarks(const int &quizId, const int &classId)
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM marks WHERE quiz_id = ? AND class_id = ?");
+    query.addBindValue(quizId);
+    query.addBindValue(classId);
+    query.exec();
+    QVariantList marks;
+    while(query.next()) {
+        QVariantMap mark;
+        mark["rollNo"] = query.value("student_id").toInt();
+        mark["correct"] = query.value("correct").toInt();
+        mark["wrong"] = query.value("wrong").toInt();
+        mark["notAttempted"] = query.value("not_attempted").toInt();
+        mark["obtainedMarks"] = query.value("marks_obtained").toDouble();
+        marks.append(mark);
+
+    }
+    return marks;
+}
