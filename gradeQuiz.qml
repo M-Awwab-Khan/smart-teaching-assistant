@@ -2,11 +2,14 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import DatabaseHandler 1.0
 
 Item {
     id: omrpage
     property string pageId: "omrpage"
     property int pNo: 1
+    property int quizId
+    property int classId
     property string ansKey
 
     width: parent.width
@@ -19,7 +22,11 @@ Item {
     }
 
     Component.onDestruction: {
-            videoStreamerOMR.stopStream()
+        videoStreamerOMR.stopStream()
+    }
+
+    DatabaseHandler {
+        id: dbhandler
     }
 
     ColumnLayout {
@@ -101,7 +108,17 @@ Item {
                 }
                 onClicked: {
                     console.log("Submit Grade Clicked!")
-                    omrManager.returnGrade()
+                    var result = omrManager.returnGrade()
+                    var response = dbhandler.uploadQuizMarks(
+                                quizId, classId, result["rollNo"],
+                                result["correct"], result["wrong"],
+                                result["unattempted"], result["obtained"])
+                    if (!response) {
+                        console.log("Failed to upload quiz marks")
+                    } else {
+                        console.log("Successfully uploaded quiz marks")
+                    }
+
                     pNo = 1
                 }
             }
@@ -149,8 +166,6 @@ Item {
             }
         }
     }
-
-
 
     Connections {
         target: OMRImageProvider
