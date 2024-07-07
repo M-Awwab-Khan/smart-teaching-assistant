@@ -11,11 +11,12 @@ Item {
     property int quizId
     property int classId
     property string ansKey
+    property double negative_marking
 
     width: parent.width
     height: parent.height
 
-    signal imageCaptured(var img, bool firstPage, string ansKey)
+    signal imageCaptured(var img, bool firstPage, string ansKey, double negative_marking)
 
     Component.onCompleted: {
         videoStreamerOMR.startStream()
@@ -186,9 +187,9 @@ Item {
             console.log(ansKey)
             var img = videoStreamerOMR.getCurrentFrame()
             if (pNo == 1) {
-                imageCaptured(img, true, ansKey)
+                imageCaptured(img, true, ansKey, negative_marking)
             } else {
-                imageCaptured(img, false, ansKey)
+                imageCaptured(img, false, ansKey, negative_marking)
             }
         }
     }

@@ -12,7 +12,7 @@ OMRmanager::OMRmanager(QObject *parent)
 {}
 
 
-void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey)
+void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey, const double negative_marking)
 {
     this->ansKey = ansKey;
     qDebug() << "First Page = " << firstPage;
@@ -31,6 +31,7 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QS
         try {
         if(firstPage) {
             this->rollNo = getRollNo(paper, paperCopy);
+            this->negative_marking = negative_marking;
             cout << "ROll: " << this->rollNo << endl;
         }
 
@@ -57,7 +58,7 @@ void OMRmanager::connectOMRPage(QObject *currentItem)
     if (currentItem) {
         QVariant pageId = currentItem->property("pageId");
         if (pageId.isValid() && pageId.toString() == "omrpage") {
-            QObject::connect(currentItem, SIGNAL(imageCaptured(QVariant, bool, QString)), this, SLOT(startOMR(QVariant, bool, QString)));
+            QObject::connect(currentItem, SIGNAL(imageCaptured(QVariant, bool, QString, double)), this, SLOT(startOMR(QVariant, bool, QString, double)));
         }
     }
 }
@@ -421,7 +422,7 @@ QVariantMap OMRmanager::returnGrade()
     result.insert("unattempted", 0);
     result.insert("correct", 0);
     result.insert("wrong", 0);
-    result.insert("obtained", 0);
+    result.insert("obtained", 0.0);
     string temp = "ABCD";
     int qNo = 0;
     for(auto i: resultVector) {
@@ -444,10 +445,14 @@ QVariantMap OMRmanager::returnGrade()
             break;
         }
     }
-    int negativeMark = 1;
-    result["obtained"] = result["correct"].toInt() - result["wrong"].toInt()*negativeMark;
-    if(result["obtained"].toInt() < 0) {
-        result["obtained"] = 0;
+    result["obtained"] = result["correct"].toInt() - result["wrong"].toInt()*negative_marking;
+
+    if (ansKey.size() > resultVector.size()) {
+        result["unattempted"] = result["unattempted"].toInt() + (ansKey.size() - resultVector.size());
+    }
+
+    if(result["obtained"].toDouble() < 0.0) {
+        result["obtained"] = 0.0;
     }
     resultVector.clear();
     for (auto it = result.begin(); it != result.end(); ++it) {
