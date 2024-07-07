@@ -153,7 +153,8 @@ Item {
                             stackView.push("gradeQuiz.qml", {
                                                "ansKey": answer_key,
                                                "quizId": quiz_id,
-                                               "classId": class_id
+                                               "classId": class_id,
+                                               "negative_marking": negative_marking
                                            })
                         }
                     }
