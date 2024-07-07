@@ -73,6 +73,7 @@ Item {
             //Title Bar
             TitleBar {
                 title: "Smart Teaching Assistant"
+                id: topBar
             }
 
             // heading bar with add class button

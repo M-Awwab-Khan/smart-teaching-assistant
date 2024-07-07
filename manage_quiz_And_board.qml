@@ -113,7 +113,7 @@ Item {
 
                             Text {
                                 id: text1
-                                color: "#5D3FD3"
+                                color: "#6C63FF"
                                 text: qsTr("Quizzes")
                                 font.pixelSize: 20
                                 font.bold: true
@@ -155,7 +155,7 @@ Item {
 
                             Text {
                                 id: text2
-                                color: "#5D3FD3"
+                                color: "#6C63FF"
                                 text: qsTr("Whiteboards")
                                 font.pixelSize: 20
                                 font.bold: true
@@ -282,6 +282,7 @@ Item {
                                             color: "#666666"
                                             font.pixelSize: 12
                                             Layout.rightMargin: 45
+                                            Layout.topMargin: 5
                                             Layout.alignment: Qt.AlignRight
                                         }
                                     }
