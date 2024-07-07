@@ -6,20 +6,46 @@ import QtQuick.Layouts
 Item {
     id: omrpage
     property string pageId: "omrpage"
+    property int pNo: 1
+    property string ansKey
 
     width: parent.width
     height: parent.height
 
-    signal imageCaptured(var img)
+    signal imageCaptured(var img, bool firstPage, string ansKey)
 
     Component.onCompleted: {
         videoStreamerOMR.startStream()
     }
 
+    Component.onDestruction: {
+            videoStreamerOMR.stopStream()
+    }
+
     ColumnLayout {
+        width: parent.width
         RowLayout {
-            width: parent.width
-            spacing: parent.width / 3
+            Layout.fillWidth: true
+            spacing: (parent.width - 100) / 4
+
+            Button {
+                Material.background: "#5D3FD3"
+                width: 80
+                height: 40
+                anchors.top: omrSpace.bottom
+                contentItem: Text {
+                    text: qsTr("Back")
+                    color: "white"
+                    font.pixelSize: 16
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                onClicked: {
+                    console.log("Back Clicked!")
+                    stackView.pop()
+                }
+            }
 
             Button {
                 Material.background: "#5D3FD3"
@@ -35,11 +61,13 @@ Item {
                 }
                 onClicked: {
                     console.log("Next Page Clicked!")
+                    retryButton.enabled = true
+                    pNo += 1
                 }
-                Layout.alignment: Qt.AlignLeft
             }
 
             Button {
+                id: retryButton
                 Material.background: "#5D3FD3"
                 width: 80
                 height: 40
@@ -52,10 +80,11 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
+                    pNo = 1
                     console.log("Retry Clicked!")
+                    omrManager.retry()
                 }
                 enabled: false
-                Layout.alignment: Qt.AlignRight
             }
 
             Button {
@@ -72,23 +101,56 @@ Item {
                 }
                 onClicked: {
                     console.log("Submit Grade Clicked!")
+                    omrManager.returnGrade()
+                    pNo = 1
                 }
-                Layout.alignment: Qt.AlignHCenter
             }
         }
 
-        Image {
-            id: omrSpace
-            fillMode: Image.PreserveAspectFit
-            source: "image://omr/image"
-            cache: false
-            anchors.centerIn: parent
+        RowLayout {
+            Layout.fillWidth: true
 
-            function reload() {
-                source = "image://omr/image?id=" + Date.now()
+            Image {
+                id: omrSpace
+                fillMode: Image.PreserveAspectFit
+                source: "image://omr/image"
+                cache: false
+                Layout.preferredWidth: 600
+                Layout.preferredHeight: 900
+                transform: Rotation {
+                    id: rotateImagePhoto
+                    angle: 90
+                    origin.x: omrSpace.width / 2
+                    origin.y: omrSpace.height / 2
+                }
+
+                Layout.topMargin: -130
+                Layout.alignment: Qt.AlignLeft
+
+                function reload() {
+                    source = "image://omr/image?id=" + Date.now()
+                }
+            }
+
+            Image {
+                id: scannedSpace
+                fillMode: Image.PreserveAspectFit
+                source: "image://scanned/image"
+                cache: false
+                Layout.preferredWidth: 400
+                Layout.preferredHeight: 600
+
+                Layout.topMargin: -130
+                Layout.alignment: Qt.AlignRight
+
+                function reload() {
+                    source = "image://scanned/image?id=" + Date.now()
+                }
             }
         }
     }
+
+
 
     Connections {
         target: OMRImageProvider
@@ -97,10 +159,22 @@ Item {
         }
     }
 
+    Connections {
+        target: scannedImageProvider
+        function onImageChanged() {
+            scannedSpace.reload()
+        }
+    }
+
     Keys.onPressed: {
         if (event.key === Qt.Key_S) {
+            console.log(ansKey)
             var img = videoStreamerOMR.getCurrentFrame()
-            imageCaptured(img)
+            if (pNo == 1) {
+                imageCaptured(img, true, ansKey)
+            } else {
+                imageCaptured(img, false, ansKey)
+            }
         }
     }
 }

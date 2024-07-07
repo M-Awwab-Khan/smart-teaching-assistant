@@ -15,6 +15,7 @@
         <file>gradeQuiz.qml</file>
         <file>AddQuiz.qml</file>
         <file>AddWhiteboard.qml</file>
+        <file>TitleBar.qml</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

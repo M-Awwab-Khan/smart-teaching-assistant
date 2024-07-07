@@ -37,6 +37,7 @@ DISTFILES += \
     AddWhiteboard.qml \
     Addclass.qml \
     EditClass.qml \
+    TitleBar.qml \
     WhiteboardSession.qml \
     classesScreen.qml \
     gradeQuiz.qml \

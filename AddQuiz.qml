@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import QtQuick
 
 Dialog {
+    id: dialog
     height: 550
     width: 600
     anchors.centerIn: parent
@@ -16,19 +17,25 @@ Dialog {
     Material.primary: Material.Blue
     Material.accent: "#6C63FF"
 
-    onAccepted: {
-        console.log("emitting signalbasic")
-        quizFormSubmitted(title.text, date.text, questionscount.text,
-                          answerkey.text, marks.text, negativemarks.text,
-                          filepath.text)
-        title.text = ""
-        date.text = ""
-        questionscount.text = ""
-        marks.text = ""
-        answerkey.text = ""
-        filepath.text = ""
-        negativemarks.text = ""
+    function submitForm() {
+        if (title.text && date.text && questionscount.text && answerkey.text
+                && marks.text && negativemarks.text && filepath.text) {
+            console.log("emitting signalbasic")
+            quizFormSubmitted(title.text, date.text, questionscount.text,
+                              answerkey.text, marks.text, negativemarks.text,
+                              filepath.text)
+            title.text = ""
+            date.text = ""
+            questionscount.text = ""
+            marks.text = ""
+            answerkey.text = ""
+            filepath.text = ""
+            negativemarks.text = ""
+            dialog.close() // Close the dialog
+        }
     }
+
+    onAccepted: submitForm()
 
     ColumnLayout {
         spacing: 20
@@ -42,6 +49,14 @@ Dialog {
             color: "black"
             placeholderText: qsTr("Enter Title")
             font.pixelSize: 17
+            Keys.onReturnPressed: date.focus = true
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Down) {
+                    date.focus = true
+                } else if (event.key === Qt.Key_Right) {
+                    date.focus = true
+                }
+            }
         }
 
         RowLayout {
@@ -56,6 +71,16 @@ Dialog {
                 color: "black"
                 placeholderText: qsTr("Enter Date")
                 font.pixelSize: 17
+                Keys.onReturnPressed: questionscount.focus = true
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Up) {
+                        title.focus = true
+                    } else if (event.key === Qt.Key_Down) {
+                        questionscount.focus = true
+                    } else if (event.key === Qt.Key_Right) {
+                        questionscount.focus = true
+                    }
+                }
             }
 
             TextField {
@@ -65,6 +90,16 @@ Dialog {
                 color: "black"
                 placeholderText: qsTr("Enter No. of questions")
                 font.pixelSize: 17
+                Keys.onReturnPressed: answerkey.focus = true
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Up) {
+                        date.focus = true
+                    } else if (event.key === Qt.Key_Down) {
+                        answerkey.focus = true
+                    } else if (event.key === Qt.Key_Left) {
+                        date.focus = true
+                    }
+                }
             }
         }
 
@@ -76,6 +111,18 @@ Dialog {
             color: "black"
             placeholderText: qsTr("Enter Answer Key")
             font.pixelSize: 17
+            Keys.onReturnPressed: marks.focus = true
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Up) {
+                    questionscount.focus = true
+                } else if (event.key === Qt.Key_Down) {
+                    marks.focus = true
+                } else if (event.key === Qt.Key_Left) {
+                    questionscount.focus = true
+                } else if (event.key === Qt.Key_Right) {
+                    marks.focus = true
+                }
+            }
         }
 
         RowLayout {
@@ -94,6 +141,18 @@ Dialog {
                     bottom: 1
                     top: 100
                 }
+                Keys.onReturnPressed: negativemarks.focus = true
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Up) {
+                        answerkey.focus = true
+                    } else if (event.key === Qt.Key_Down) {
+                        negativemarks.focus = true
+                    } else if (event.key === Qt.Key_Left) {
+                        answerkey.focus = true
+                    } else if (event.key === Qt.Key_Right) {
+                        negativemarks.focus = true
+                    }
+                }
             }
 
             TextField {
@@ -107,6 +166,16 @@ Dialog {
                     bottom: 0
                     top: 3
                 }
+                Keys.onReturnPressed: fileButton.focus = true
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Up) {
+                        marks.focus = true
+                    } else if (event.key === Qt.Key_Down) {
+                        fileButton.focus = true
+                    } else if (event.key === Qt.Key_Left) {
+                        marks.focus = true
+                    }
+                }
             }
         }
 
@@ -116,10 +185,19 @@ Dialog {
             radius: 7
             anchors.left: parent.left
             Button {
+                id: fileButton
                 text: "Select test"
                 onClicked: fileDialog.open()
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
+                Keys.onReturnPressed: submitForm()
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Up) {
+                        negativemarks.focus = true
+                    } else if (event.key === Qt.Key_Left) {
+                        negativemarks.focus = true
+                    }
+                }
             }
 
             FileDialog {
@@ -130,6 +208,7 @@ Dialog {
                 onAccepted: {
                     console.log("Selected file:", fileDialog.selectedFile)
                     filepath.text = fileDialog.selectedFile
+                    fileButton.focus = true
                 }
             }
 

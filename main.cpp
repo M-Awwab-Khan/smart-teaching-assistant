@@ -84,9 +84,11 @@ int main(int argc, char *argv[])
 
     OpenCVImageProvider *whiteboardImageProvider(new OpenCVImageProvider);
     OpenCVImageProvider *OMRImageProvider(new OpenCVImageProvider);
+    OpenCVImageProvider *scannedImageProvider(new OpenCVImageProvider);
 
     engine.rootContext()->setContextProperty("whiteboardImageProvider", whiteboardImageProvider);
     engine.rootContext()->setContextProperty("OMRImageProvider", OMRImageProvider);
+    engine.rootContext()->setContextProperty("scannedImageProvider", scannedImageProvider);
     engine.rootContext()->setContextProperty("videoStreamer", &videoStreamer);
     engine.rootContext()->setContextProperty("videoStreamerOMR", &videoStreamerOMR);
     engine.rootContext()->setContextProperty("whiteboardManager", &whiteboardManager);
@@ -94,6 +96,7 @@ int main(int argc, char *argv[])
 
     engine.addImageProvider("whiteboard", whiteboardImageProvider);
     engine.addImageProvider("omr", OMRImageProvider);
+    engine.addImageProvider("scanned", scannedImageProvider);
 
 
     const QUrl url(QStringLiteral("qrc:/smart-teaching-assistant/main.qml"));
@@ -111,9 +114,6 @@ int main(int argc, char *argv[])
     QObject::connect(&videoStreamerOMR, &VideoStreamer::newImage,  OMRImageProvider, &OpenCVImageProvider::updateImage);
     QObject::connect(&videoStreamer, &VideoStreamer::newImage, &whiteboardManager, &WhiteboardManager::processFrame);
     QObject::connect(&whiteboardManager, &WhiteboardManager::newWeightedImage, whiteboardImageProvider, &OpenCVImageProvider::updateImage);
-
-    // QObject *rootObject = engine.rootObjects().first();
-    // QObject::connect(rootObject, SIGNAL(imageCaptured(QVariant)), &omrManager, SLOT(startOMR(QVariant)));
-
+    QObject::connect(&omrManager, &OMRmanager::newScannedImage, scannedImageProvider, &OpenCVImageProvider::updateImage);
     return app.exec();
 }
