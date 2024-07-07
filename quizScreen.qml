@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import DatabaseHandler 1.0
+import QtQuick.Dialogs
 
 Item {
     id: root
@@ -18,6 +20,35 @@ Item {
     property string taken_at
     property string answer_key
     property string test_paper_img_path
+
+    function loadMarks() {
+        var marks = dbhandler.getMarks(quiz_id, class_id)
+        console.log(marks.length)
+        marksModel.clear()
+        for (var i = 0; i < marks.length; i++) {
+            marksModel.append(marks[i])
+        }
+        console.log("Successfully loaded marks")
+    }
+
+    Component.onCompleted: loadMarks()
+
+    DatabaseHandler {
+        id: dbhandler
+    }
+
+    FileDialog {
+        id: saveDialog
+        title: "Save Dialog"
+        currentFile: "quiz" + quiz_id.toString()
+        nameFilters: ["CSV files (*.csv)"]
+        fileMode: FileDialog.SaveFile
+        onAccepted: {
+            dbhandler.exportMarksAsCSV(saveDialog.selectedFile.toString(
+                                           ).replace("file:///", ""),
+                                       quiz_id, class_id)
+        }
+    }
 
     ScrollView {
         contentHeight: 1200
@@ -61,6 +92,7 @@ Item {
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                         Layout.bottomMargin: 20
+                        font.bold: true
                     }
 
                     // Text {
@@ -79,7 +111,6 @@ Item {
                         Layout.maximumWidth: parent.width
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignJustify | Qt.AlignTop
-                        font.bold: true
                         Layout.bottomMargin: 10
                     }
 
@@ -90,7 +121,6 @@ Item {
                         Layout.maximumWidth: parent.width
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignJustify | Qt.AlignTop
-                        font.bold: true
                         Layout.bottomMargin: 10
                     }
 
@@ -101,13 +131,13 @@ Item {
                         Layout.maximumWidth: parent.width
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignJustify | Qt.AlignTop
-                        font.bold: true
                     }
 
                     Button {
-                        Material.background: "#5D3FD3"
+                        Material.background: "#6C63FF"
                         width: 80
                         height: 40
+                        text: qsTr("Grade")
                         contentItem: Text {
                             text: qsTr("Grade")
                             color: "white"
@@ -116,10 +146,16 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }
+                        Layout.topMargin: 10
                         // anchors.top: parent.top
                         // anchors.left: parent.left
                         onClicked: {
-                            stackView.push("gradeQuiz.qml", {"ansKey": answer_key})
+                            stackView.push("gradeQuiz.qml", {
+                                               "ansKey": answer_key,
+                                               "quizId": quiz_id,
+                                               "classId": class_id,
+                                               "negative_marking": negative_marking
+                                           })
                         }
                     }
                 }
@@ -145,16 +181,6 @@ Item {
             }
         }
 
-        Text {
-            id: marksHeading
-            text: "Student's Marks"
-            color: "#666666"
-            font.pixelSize: 40
-            font.bold: true
-            x: (root.width - 250) / 2
-            y: quizDetails.height - 100
-        }
-
         Rectangle {
             id: tableRect
 
@@ -168,6 +194,47 @@ Item {
                 anchors.centerIn: parent
                 spacing: 0
                 anchors.topMargin: 100
+
+                Text {
+                    id: marksHeading
+                    text: "Marks Table"
+                    color: "#333333"
+                    font.pixelSize: 40
+                    font.bold: true
+                    // x: (root.width - 250) / 2
+                    // y: quizDetails.height - 100
+                }
+
+                Button {
+                    text: "+ Export As CSV"
+                    Material.background: "#6C63FF"
+                    font.pixelSize: 16
+                    font.bold: true
+
+                    Image {
+                        source: "https://www.iconsdb.com/icons/preview/white/download-2-xxl.png"
+                        width: 15
+                        height: 15
+
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 15
+                    }
+
+                    contentItem: Text {
+                        text: qsTr("    Export As CSV")
+                        color: "white"
+                        font.pixelSize: 16
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    anchors.right: parent.right
+                    anchors.bottomMargin: 30
+                    onClicked: {
+                        saveDialog.open()
+                    }
+                }
 
                 // Header Row
                 Row {
@@ -183,7 +250,6 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Roll No"
-                            font.bold: true
                         }
                     }
 
@@ -197,7 +263,6 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Correct"
-                            font.bold: true
                         }
                     }
 
@@ -211,7 +276,6 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Wrong"
-                            font.bold: true
                         }
                     }
 
@@ -225,7 +289,6 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Not Attempted"
-                            font.bold: true
                         }
                     }
 
@@ -239,9 +302,12 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Obtained Marks"
-                            font.bold: true
                         }
                     }
+                }
+
+                ListModel {
+                    id: marksModel
                 }
 
                 // Data Rows
@@ -249,50 +315,7 @@ Item {
                     width: 540
                     height: 200
                     spacing: 0
-                    model: ListModel {
-                        ListElement {
-                            rollNo: "001"
-                            correct: 18
-                            wrong: 2
-                            notAttempted: 0
-                            obtainedMarks: 16.0
-                        }
-                        ListElement {
-                            rollNo: "002"
-                            correct: 17
-                            wrong: 1
-                            notAttempted: 2
-                            obtainedMarks: 16.0
-                        }
-                        ListElement {
-                            rollNo: "003"
-                            correct: 20
-                            wrong: 0
-                            notAttempted: 0
-                            obtainedMarks: 20.0
-                        }
-                        ListElement {
-                            rollNo: "001"
-                            correct: 18
-                            wrong: 2
-                            notAttempted: 0
-                            obtainedMarks: 16.0
-                        }
-                        ListElement {
-                            rollNo: "002"
-                            correct: 17
-                            wrong: 1
-                            notAttempted: 2
-                            obtainedMarks: 16.0
-                        }
-                        ListElement {
-                            rollNo: "003"
-                            correct: 20
-                            wrong: 0
-                            notAttempted: 0
-                            obtainedMarks: 200.0
-                        }
-                    }
+                    model: marksModel
 
                     delegate: Row {
                         spacing: 0

@@ -2,24 +2,32 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import DatabaseHandler 1.0
 
 Item {
     id: omrpage
     property string pageId: "omrpage"
     property int pNo: 1
+    property int quizId
+    property int classId
     property string ansKey
+    property double negative_marking
 
     width: parent.width
     height: parent.height
 
-    signal imageCaptured(var img, bool firstPage, string ansKey)
+    signal imageCaptured(var img, bool firstPage, string ansKey, double negative_marking)
 
     Component.onCompleted: {
         videoStreamerOMR.startStream()
     }
 
     Component.onDestruction: {
-            videoStreamerOMR.stopStream()
+        videoStreamerOMR.stopStream()
+    }
+
+    DatabaseHandler {
+        id: dbhandler
     }
 
     ColumnLayout {
@@ -101,7 +109,17 @@ Item {
                 }
                 onClicked: {
                     console.log("Submit Grade Clicked!")
-                    omrManager.returnGrade()
+                    var result = omrManager.returnGrade()
+                    var response = dbhandler.uploadQuizMarks(
+                                quizId, classId, result["rollNo"],
+                                result["correct"], result["wrong"],
+                                result["unattempted"], result["obtained"])
+                    if (!response) {
+                        console.log("Failed to upload quiz marks")
+                    } else {
+                        console.log("Successfully uploaded quiz marks")
+                    }
+
                     pNo = 1
                 }
             }
@@ -150,8 +168,6 @@ Item {
         }
     }
 
-
-
     Connections {
         target: OMRImageProvider
         function onImageChanged() {
@@ -171,9 +187,9 @@ Item {
             console.log(ansKey)
             var img = videoStreamerOMR.getCurrentFrame()
             if (pNo == 1) {
-                imageCaptured(img, true, ansKey)
+                imageCaptured(img, true, ansKey, negative_marking)
             } else {
-                imageCaptured(img, false, ansKey)
+                imageCaptured(img, false, ansKey, negative_marking)
             }
         }
     }

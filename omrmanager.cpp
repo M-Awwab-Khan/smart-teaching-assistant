@@ -12,7 +12,7 @@ OMRmanager::OMRmanager(QObject *parent)
 {}
 
 
-void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey)
+void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey, const double negative_marking)
 {
     this->ansKey = ansKey;
     qDebug() << "First Page = " << firstPage;
@@ -31,11 +31,13 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QS
         try {
         if(firstPage) {
             this->rollNo = getRollNo(paper, paperCopy);
+            this->negative_marking = negative_marking;
             cout << "ROll: " << this->rollNo << endl;
         }
 
         vector<int> temp = getSelectedOptions(paper, paperCopy, firstPage);
         resultVector.insert(resultVector.end(), temp.begin(), temp.end());
+        qDebug() << "Length of REsult Vector " << resultVector.size();
 
 
 
@@ -56,7 +58,7 @@ void OMRmanager::connectOMRPage(QObject *currentItem)
     if (currentItem) {
         QVariant pageId = currentItem->property("pageId");
         if (pageId.isValid() && pageId.toString() == "omrpage") {
-            QObject::connect(currentItem, SIGNAL(imageCaptured(QVariant, bool, QString)), this, SLOT(startOMR(QVariant, bool, QString)));
+            QObject::connect(currentItem, SIGNAL(imageCaptured(QVariant, bool, QString, double)), this, SLOT(startOMR(QVariant, bool, QString, double)));
         }
     }
 }
@@ -127,7 +129,17 @@ vector<vector<vector<Point>>> OMRmanager::getCircles(Mat img, Mat& imgCopy, int 
     vector<vector<Point>> contours;
     vector<Vec4i> hierarchy;
 
+    if (rollNo) {
     findContours(imgEdge, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    } else {
+        findContours(imgEdge, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+
+    }
+    // if (rollNo)
+    // {
+    //     imshow("Edged", imgEdge);
+    //     waitKey(0);
+    // }
 
     vector<vector<Point>> conPoly(contours.size());
     Rect boundRect;
@@ -318,7 +330,7 @@ int OMRmanager::getRollNo(Mat& img, Mat& imgCopy) {
         }
     }
 
-    Rect roi(boundRect.tl().x, boundRect.tl().y, boundRect.br().x - boundRect.tl().x, boundRect.br().y - boundRect.tl().y);
+    Rect roi(boundRect.tl().x + 20, boundRect.tl().y, boundRect.br().x - boundRect.tl().x, boundRect.br().y - boundRect.tl().y);
 
     localImg = img(roi);		// Cropped the Image
 
@@ -375,7 +387,8 @@ vector<int> OMRmanager::getSelectedOptions(Mat& img, Mat& imgCopy, bool firstPag
         roi1 = Rect(boundRect.tl().x, boundRect.br().y, 480, 850);
         roi2 = Rect(boundRect.tl().x + 380, boundRect.br().y, 480, 850);
 
-
+        // roi1 = Rect(boundRect.tl().x, boundRect.br().y + 10, boundRect.tl().x + ((boundRect.tl().x + boundRect.br().x) / 2), 860);
+        // roi2 = Rect(boundRect.tl().x + ((boundRect.tl().x + boundRect.br().x) / 2), boundRect.br().y + 10, 480, 860);
 
 
         //roi1 = Rect(15, 500, 480, 850);
@@ -409,8 +422,7 @@ QVariantMap OMRmanager::returnGrade()
     result.insert("unattempted", 0);
     result.insert("correct", 0);
     result.insert("wrong", 0);
-    //result.insert("negative", 0);
-    result.insert("obtained", 0);
+    result.insert("obtained", 0.0);
     string temp = "ABCD";
     int qNo = 0;
     for(auto i: resultVector) {
@@ -429,11 +441,18 @@ QVariantMap OMRmanager::returnGrade()
             }
         }
         qNo += 1;
+        if (qNo == ansKey.size()) {
+            break;
+        }
     }
-    int negativeMark = 1;
-    result["obtained"] = result["correct"].toInt() - result["wrong"].toInt()*negativeMark;
-    if(result["obtained"].toInt() < 0) {
-        result["obtained"] = 0;
+    result["obtained"] = result["correct"].toInt() - result["wrong"].toInt()*negative_marking;
+
+    if (ansKey.size() > resultVector.size()) {
+        result["unattempted"] = result["unattempted"].toInt() + (ansKey.size() - resultVector.size());
+    }
+
+    if(result["obtained"].toDouble() < 0.0) {
+        result["obtained"] = 0.0;
     }
     resultVector.clear();
     for (auto it = result.begin(); it != result.end(); ++it) {

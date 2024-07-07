@@ -20,6 +20,17 @@ bool DatabaseHandler::addClass(const QString &className, const int &studentCount
         qWarning() << "Add class failed: " << query.lastError();
         return false;
     }
+
+    int classId = query.lastInsertId().toInt();
+    query.prepare("INSERT INTO students (student_id, class_id) VALUES (?, ?)");
+    for (int i = 1; i <= studentCount; ++i) {
+        query.addBindValue(i);
+        query.addBindValue(classId);
+
+        if (!query.exec()) {
+            qDebug() << "Error inserting student:" << query.lastError().text();
+        }
+    }
     return true;
 }
 
@@ -140,4 +151,77 @@ bool DatabaseHandler::addWhiteboard(const int &classId, const QString &whiteboar
         return false;
     }
     return true;
+}
+
+bool DatabaseHandler::uploadQuizMarks(const int &quizId, const int &classId, const int &studentId, const int &correct, const int &wrong, const int &unattempted, const int &obtained)
+{
+    QSqlQuery query;
+    query.prepare("INSERT OR REPLACE INTO marks (quiz_id, student_id, class_id, correct, wrong, not_attempted, marks_obtained) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    query.addBindValue(quizId);
+    query.addBindValue(studentId);
+    query.addBindValue(classId);
+    query.addBindValue(correct);
+    query.addBindValue(wrong);
+    query.addBindValue(unattempted);
+    query.addBindValue(obtained);
+
+    if (!query.exec()) {
+        qWarning() << "Couldn't add quiz marks: " << query.lastError();
+        return false;
+    }
+    return true;
+}
+
+QVariantList DatabaseHandler::getMarks(const int &quizId, const int &classId)
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM marks WHERE quiz_id = ? AND class_id = ?");
+    query.addBindValue(quizId);
+    query.addBindValue(classId);
+    query.exec();
+    QVariantList marks;
+    while(query.next()) {
+        QVariantMap mark;
+        mark["rollNo"] = query.value("student_id").toInt();
+        mark["correct"] = query.value("correct").toInt();
+        mark["wrong"] = query.value("wrong").toInt();
+        mark["notAttempted"] = query.value("not_attempted").toInt();
+        mark["obtainedMarks"] = query.value("marks_obtained").toDouble();
+        marks.append(mark);
+    }
+    return marks;
+}
+
+void DatabaseHandler::exportMarksAsCSV(const QString &filePath, const int &quizId, const int &classId)
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM marks WHERE quiz_id = ? AND class_id = ?");
+    query.addBindValue(quizId);
+    query.addBindValue(classId);
+
+    if (!query.exec()) {
+        qWarning() << "Couldn't retrieve quiz marks: " << query.lastError();
+        return;
+    }
+
+    QFile file(filePath);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        // Write header
+        out << "student_id,quiz_id,class_id,correct,wrong,not_attempted,marks_obtained\n";
+
+        // Write data
+        while (query.next()) {
+            int studentId = query.value("student_id").toInt();
+            int quizId = query.value("quiz_id").toInt();
+            int classId = query.value("class_id").toInt();
+            int correct = query.value("correct").toInt();
+            int wrong = query.value("wrong").toInt();
+            int notAttempted = query.value("not_attempted").toInt();
+            double marksObtained = query.value("marks_obtained").toDouble();
+
+            out << studentId << "," << quizId << "," << classId << "," << correct << "," << wrong << "," << notAttempted << "," << marksObtained << "\n";
+        }
+        file.close();
+    }
 }

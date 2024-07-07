@@ -24,14 +24,14 @@ void initializeDatabase() {
 
     QSqlQuery query;
     query.exec("CREATE TABLE IF NOT EXISTS classes (\
-               id INTEGER PRIMARY KEY,\
+               id INTEGER PRIMARY KEY AUTOINCREMENT,\
                className TEXT, \
                studentCount INTEGER, \
                teacherName TEXT, \
                centerName TEXT\
                )");
     query.exec("CREATE TABLE IF NOT EXISTS students  (\
-               student_id INTEGER PRIMARY KEY,\
+               student_id INTEGER,\
                class_id INTEGER,\
                FOREIGN KEY (class_id) REFERENCES classes(id)\
                )");
@@ -45,14 +45,20 @@ void initializeDatabase() {
                answer_key TEXT NOT NULL,\
                test_paper_img_path TEXT,\
                taken_at TEXT DEFAULT CURRENT_TIMESTAMP,\
-               FOREIGN KEY (class_id) REFERENCES classes(class_id)\
+               FOREIGN KEY (class_id) REFERENCES classes(id)\
                )");
     query.exec("CREATE TABLE IF NOT EXISTS marks (\
                student_id INTEGER,\
                quiz_id INTEGER,\
+               class_id INTEGER,\
+               correct INTEGER,\
+               wrong INTEGER,\
+               not_attempted INTEGER,\
                marks_obtained REAL,\
                FOREIGN KEY (student_id) REFERENCES students(student_id),\
                FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id)\
+               FOREIGN KEY (class_id) REFERENCES classes(id)\
+               UNIQUE (quiz_id, class_id, student_id)\
                )");
 
     query.exec("CREATE TABLE whiteboards (\
@@ -61,7 +67,7 @@ void initializeDatabase() {
                class_id INTEGER,\
                created_at TEXT DEFAULT CURRENT_TIMESTAMP,\
                assets_path TEXT NOT NULL,\
-               FOREIGN KEY (class_id) REFERENCES classes(class_id)\
+               FOREIGN KEY (class_id) REFERENCES classes(id)\
                )");
 
 }

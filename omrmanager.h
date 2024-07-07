@@ -26,7 +26,7 @@ public:
     Q_INVOKABLE void retry();
 
 public slots:
-    void startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey);
+    void startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey, const double negative_marking);
     void connectOMRPage(QObject* currentItem);
 
 signals:
@@ -38,6 +38,7 @@ private:
     std::vector<int> resultVector;
     QString ansKey;
     int rollNo;
+    double negative_marking;
 };
 
 #endif // OMRMANAGER_H

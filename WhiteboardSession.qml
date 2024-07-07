@@ -11,6 +11,8 @@ Item {
     width: parent.width
     height: parent.height
     visible: true
+    id: focusArea
+    focus: true
 
     Material.theme: Material.Light
     Material.primary: Material.Blue
@@ -116,49 +118,19 @@ Item {
         }
     }
 
-    RowLayout {
-        id: imageRect
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        width: parent.width
-        anchors.bottom: parent.bottom
+    Image {
+        id: whiteboardSpace
+        fillMode: Image.PreserveAspectFit
+        width: 800
+        height: 600
         anchors.top: buttons.bottom
-
-        Item {
-            id: focusArea
-            anchors {
-                top: parent.top
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-                topMargin: 100
-            }
-
-            focus: true
-            Keys.onPressed: {
-                if (event.key === Qt.Key_Control) {
-                    whiteboardManager.enableDrawing()
-                }
-            }
-
-            Keys.onReleased: {
-                if (event.key === Qt.Key_Control) {
-                    whiteboardManager.disableDrawing()
-                }
-            }
-
-            Image {
-                id: whiteboardSpace
-                fillMode: Image.PreserveAspectFit
-                width: 800
-                height: 600
-                anchors.centerIn: parent
-                source: "image://whiteboard/image"
-                cache: false
-                function reload() {
-                    source = "image://whiteboard/image?id=" + Date.now()
-                }
-            }
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        source: "image://whiteboard/image"
+        cache: false
+        function reload() {
+            source = "image://whiteboard/image?id=" + Date.now()
         }
     }
 
@@ -190,10 +162,12 @@ Item {
             var cleanedPath = rawPath.replace("file:///", "")
             whiteboardManager.saveSnapshot(cleanedPath)
             console.log("Snapshot saved to " + cleanedPath)
+            focusArea.focus = true
         }
 
         onRejected: {
             console.log("Snapshot save canceled")
+            focusArea.focus = true
         }
     }
 
@@ -201,7 +175,18 @@ Item {
         target: whiteboardImageProvider
         function onImageChanged() {
             whiteboardSpace.reload()
-            focusArea.focus = true
+        }
+    }
+
+    Keys.onPressed: {
+        if (event.key === Qt.Key_Control) {
+            whiteboardManager.enableDrawing()
+        }
+    }
+
+    Keys.onReleased: {
+        if (event.key === Qt.Key_Control) {
+            whiteboardManager.disableDrawing()
         }
     }
 }

@@ -91,7 +91,7 @@ void WhiteboardManager::processFrame(const QImage &frame)
     // qtWhiteboardImage = QImage(whiteboard.data, whiteboard.cols, whiteboard.rows, QImage::Format_RGB888).rgbSwapped();
 
     cv::Mat weightedFrame;
-    cv::addWeighted(matFrame, 0.5, whiteboard, 0.5, 0, weightedFrame);
+    cv::addWeighted(matFrame, 0.3, whiteboard, 0.7, 0, weightedFrame);
 
     qtWeightedImage = QImage(weightedFrame.data, weightedFrame.cols, weightedFrame.rows, QImage::Format_RGB888).rgbSwapped();
 
@@ -118,7 +118,7 @@ void WhiteboardManager::loadImage(const QString &filePath) {
     if (!image.isNull()) {
         qDebug() << "image converted";
         cv::Mat mat(image.height(), image.width(), CV_8UC4, const_cast<uchar*>(image.bits()), image.bytesPerLine());
-        cv::cvtColor(mat, whiteboard, cv::COLOR_RGBA2BGR);
+        cv::cvtColor(mat, whiteboard, cv::COLOR_RGBA2RGB);
         emit newWeightedImage(QImage(whiteboard.data, whiteboard.cols, whiteboard.rows, QImage::Format_RGB888).rgbSwapped());
     }
 }
