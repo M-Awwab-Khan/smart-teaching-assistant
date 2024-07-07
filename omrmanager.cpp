@@ -36,6 +36,7 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QS
 
         vector<int> temp = getSelectedOptions(paper, paperCopy, firstPage);
         resultVector.insert(resultVector.end(), temp.begin(), temp.end());
+        qDebug() << "Length of REsult Vector " << resultVector.size();
 
 
 
@@ -409,7 +410,6 @@ QVariantMap OMRmanager::returnGrade()
     result.insert("unattempted", 0);
     result.insert("correct", 0);
     result.insert("wrong", 0);
-    //result.insert("negative", 0);
     result.insert("obtained", 0);
     string temp = "ABCD";
     int qNo = 0;
@@ -429,6 +429,9 @@ QVariantMap OMRmanager::returnGrade()
             }
         }
         qNo += 1;
+        if (qNo == ansKey.size()) {
+            break;
+        }
     }
     int negativeMark = 1;
     result["obtained"] = result["correct"].toInt() - result["wrong"].toInt()*negativeMark;
