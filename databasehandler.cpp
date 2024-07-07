@@ -20,6 +20,17 @@ bool DatabaseHandler::addClass(const QString &className, const int &studentCount
         qWarning() << "Add class failed: " << query.lastError();
         return false;
     }
+
+    int classId = query.lastInsertId().toInt();
+    query.prepare("INSERT INTO students (student_id, class_id) VALUES (?, ?)");
+    for (int i = 1; i <= studentCount; ++i) {
+        query.addBindValue(i);
+        query.addBindValue(classId);
+
+        if (!query.exec()) {
+            qDebug() << "Error inserting student:" << query.lastError().text();
+        }
+    }
     return true;
 }
 
@@ -137,6 +148,25 @@ bool DatabaseHandler::addWhiteboard(const int &classId, const QString &whiteboar
     query.addBindValue(folderPath);
     if (!query.exec()) {
         qWarning() << "Add whiteboard failed: " << query.lastError();
+        return false;
+    }
+    return true;
+}
+
+bool DatabaseHandler::uploadQuizMarks(const int &quizId, const int &classId, const int &studentId, const int &correct, const int &wrong, const int &unattempted, const int &obtained)
+{
+    QSqlQuery query;
+    query.prepare("INSERT OR REPLACE INTO marks (quiz_id, student_id, class_id, correct, wrong, not_attempted, marks_obtained) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    query.addBindValue(quizId);
+    query.addBindValue(studentId);
+    query.addBindValue(classId);
+    query.addBindValue(correct);
+    query.addBindValue(wrong);
+    query.addBindValue(unattempted);
+    query.addBindValue(obtained);
+
+    if (!query.exec()) {
+        qWarning() << "Couldn't add quiz marks: " << query.lastError();
         return false;
     }
     return true;
