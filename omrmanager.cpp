@@ -128,7 +128,17 @@ vector<vector<vector<Point>>> OMRmanager::getCircles(Mat img, Mat& imgCopy, int 
     vector<vector<Point>> contours;
     vector<Vec4i> hierarchy;
 
+    if (rollNo) {
     findContours(imgEdge, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    } else {
+        findContours(imgEdge, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+
+    }
+    // if (rollNo)
+    // {
+    //     imshow("Edged", imgEdge);
+    //     waitKey(0);
+    // }
 
     vector<vector<Point>> conPoly(contours.size());
     Rect boundRect;
@@ -319,7 +329,7 @@ int OMRmanager::getRollNo(Mat& img, Mat& imgCopy) {
         }
     }
 
-    Rect roi(boundRect.tl().x, boundRect.tl().y, boundRect.br().x - boundRect.tl().x, boundRect.br().y - boundRect.tl().y);
+    Rect roi(boundRect.tl().x + 20, boundRect.tl().y, boundRect.br().x - boundRect.tl().x, boundRect.br().y - boundRect.tl().y);
 
     localImg = img(roi);		// Cropped the Image
 
@@ -376,7 +386,8 @@ vector<int> OMRmanager::getSelectedOptions(Mat& img, Mat& imgCopy, bool firstPag
         roi1 = Rect(boundRect.tl().x, boundRect.br().y, 480, 850);
         roi2 = Rect(boundRect.tl().x + 380, boundRect.br().y, 480, 850);
 
-
+        // roi1 = Rect(boundRect.tl().x, boundRect.br().y + 10, boundRect.tl().x + ((boundRect.tl().x + boundRect.br().x) / 2), 860);
+        // roi2 = Rect(boundRect.tl().x + ((boundRect.tl().x + boundRect.br().x) / 2), boundRect.br().y + 10, 480, 860);
 
 
         //roi1 = Rect(15, 500, 480, 850);
