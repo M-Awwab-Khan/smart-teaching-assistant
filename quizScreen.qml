@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
 import DatabaseHandler 1.0
+import QtQuick.Dialogs
 
 Item {
     id: root
@@ -34,6 +35,19 @@ Item {
 
     DatabaseHandler {
         id: dbhandler
+    }
+
+    FileDialog {
+        id: saveDialog
+        title: "Save Dialog"
+        currentFile: "quiz" + quiz_id.toString()
+        nameFilters: ["CSV files (*.csv)"]
+        fileMode: FileDialog.SaveFile
+        onAccepted: {
+            dbhandler.exportMarksAsCSV(saveDialog.selectedFile.toString(
+                                           ).replace("file:///", ""),
+                                       quiz_id, class_id)
+        }
     }
 
     ScrollView {
@@ -122,7 +136,7 @@ Item {
                     }
 
                     Button {
-                        Material.background: "#5D3FD3"
+                        Material.background: "#6C63FF"
                         width: 80
                         height: 40
                         contentItem: Text {
@@ -190,6 +204,37 @@ Item {
                 spacing: 0
                 anchors.topMargin: 100
 
+                Button {
+                    text: "+ Export As CSV"
+                    Material.background: "#6C63FF"
+                    font.pixelSize: 16
+                    font.bold: true
+
+                    Image {
+                        source: "https://www.iconsdb.com/icons/preview/white/download-2-xxl.png"
+                        width: 15
+                        height: 15
+
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 15
+                    }
+
+                    contentItem: Text {
+                        text: qsTr("    Export As CSV")
+                        color: "white"
+                        font.pixelSize: 16
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    anchors.right: parent.right
+                    anchors.bottomMargin: 30
+                    onClicked: {
+                        saveDialog.open()
+                    }
+                }
+
                 // Header Row
                 Row {
                     spacing: 0
@@ -204,7 +249,6 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Roll No"
-                            font.bold: true
                         }
                     }
 
@@ -218,7 +262,6 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Correct"
-                            font.bold: true
                         }
                     }
 
@@ -232,7 +275,6 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Wrong"
-                            font.bold: true
                         }
                     }
 
@@ -246,7 +288,6 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Not Attempted"
-                            font.bold: true
                         }
                     }
 
@@ -260,7 +301,6 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: "Obtained Marks"
-                            font.bold: true
                         }
                     }
                 }
