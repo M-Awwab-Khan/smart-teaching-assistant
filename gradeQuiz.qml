@@ -51,6 +51,7 @@ Item {
                 }
                 onClicked: {
                     console.log("Back Clicked!")
+                    omrManager.retry()
                     stackView.pop()
                 }
             }
@@ -69,7 +70,6 @@ Item {
                 }
                 onClicked: {
                     console.log("Next Page Clicked!")
-                    retryButton.enabled = true
                     pNo += 1
                 }
             }
@@ -92,7 +92,6 @@ Item {
                     console.log("Retry Clicked!")
                     omrManager.retry()
                 }
-                enabled: false
             }
 
             Button {

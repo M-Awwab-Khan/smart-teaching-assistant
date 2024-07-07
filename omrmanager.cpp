@@ -15,6 +15,7 @@ OMRmanager::OMRmanager(QObject *parent)
 void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QString ansKey, const double negative_marking)
 {
     this->ansKey = ansKey;
+    this->negative_marking = negative_marking;
     qDebug() << "First Page = " << firstPage;
     qDebug() << ansKey;
     if (imgVar.canConvert<QImage>()) {
@@ -31,7 +32,6 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QS
         try {
         if(firstPage) {
             this->rollNo = getRollNo(paper, paperCopy);
-            this->negative_marking = negative_marking;
             cout << "ROll: " << this->rollNo << endl;
         }
 
@@ -307,6 +307,9 @@ int OMRmanager::getRollNo(Mat& img, Mat& imgCopy) {
     GaussianBlur(imgEdge, imgEdge, Size(5, 5), 0); // Blur
     Canny(imgEdge, imgEdge, 75, 200); // Edge detection
 
+    Mat kernel = getStructuringElement(MORPH_RECT, Size(5,5));
+    dilate(imgEdge, imgEdge, kernel);
+
     // Detecting rectangle
     vector<vector<Point>> contours; // For storing shapes
     vector<Vec4i> hierarchy;
@@ -463,6 +466,11 @@ QVariantMap OMRmanager::returnGrade()
 
 void OMRmanager::retry()
 {
+    qDebug() << "REtrying...";
     resultVector.clear();
+    result.clear();
+    scannedImage = QImage();
+    emit newScannedImage(scannedImage);
+
 }
 
