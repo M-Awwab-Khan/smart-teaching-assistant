@@ -92,6 +92,7 @@ Item {
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                         Layout.bottomMargin: 20
+                        font.bold: true
                     }
 
                     // Text {
@@ -110,7 +111,6 @@ Item {
                         Layout.maximumWidth: parent.width
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignJustify | Qt.AlignTop
-                        font.bold: true
                         Layout.bottomMargin: 10
                     }
 
@@ -121,7 +121,6 @@ Item {
                         Layout.maximumWidth: parent.width
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignJustify | Qt.AlignTop
-                        font.bold: true
                         Layout.bottomMargin: 10
                     }
 
@@ -132,13 +131,13 @@ Item {
                         Layout.maximumWidth: parent.width
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignJustify | Qt.AlignTop
-                        font.bold: true
                     }
 
                     Button {
                         Material.background: "#6C63FF"
                         width: 80
                         height: 40
+                        text: qsTr("Grade")
                         contentItem: Text {
                             text: qsTr("Grade")
                             color: "white"
@@ -147,6 +146,7 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }
+                        Layout.topMargin: 10
                         // anchors.top: parent.top
                         // anchors.left: parent.left
                         onClicked: {
@@ -181,16 +181,6 @@ Item {
             }
         }
 
-        Text {
-            id: marksHeading
-            text: "Student's Marks"
-            color: "#666666"
-            font.pixelSize: 40
-            font.bold: true
-            x: (root.width - 250) / 2
-            y: quizDetails.height - 100
-        }
-
         Rectangle {
             id: tableRect
 
@@ -204,6 +194,16 @@ Item {
                 anchors.centerIn: parent
                 spacing: 0
                 anchors.topMargin: 100
+
+                Text {
+                    id: marksHeading
+                    text: "Marks Table"
+                    color: "#333333"
+                    font.pixelSize: 40
+                    font.bold: true
+                    // x: (root.width - 250) / 2
+                    // y: quizDetails.height - 100
+                }
 
                 Button {
                     text: "+ Export As CSV"
