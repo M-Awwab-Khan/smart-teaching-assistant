@@ -153,7 +153,7 @@ bool DatabaseHandler::addWhiteboard(const int &classId, const QString &whiteboar
     return true;
 }
 
-bool DatabaseHandler::uploadQuizMarks(const int &quizId, const int &classId, const int &studentId, const int &correct, const int &wrong, const int &unattempted, const int &obtained)
+bool DatabaseHandler::uploadQuizMarks(const int &quizId, const int &classId, const int &studentId, const int &correct, const int &wrong, const int &unattempted, const double &obtained)
 {
     QSqlQuery query;
     query.prepare("INSERT OR REPLACE INTO marks (quiz_id, student_id, class_id, correct, wrong, not_attempted, marks_obtained) VALUES (?, ?, ?, ?, ?, ?, ?)");
