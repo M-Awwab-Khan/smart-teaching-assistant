@@ -17,7 +17,7 @@ public:
 
 public:
     void streamVideo();
-    Q_INVOKABLE void startStream();
+    Q_INVOKABLE void startStream(int  camera);
     Q_INVOKABLE void stopStream();
     Q_INVOKABLE QImage getCurrentFrame() const;
 
