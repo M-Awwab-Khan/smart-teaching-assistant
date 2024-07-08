@@ -219,14 +219,14 @@ vector<int> OMRmanager::getSelectedCircles(Mat& img, vector<vector<vector<Point>
 
 
     int indexOfCircle = -1;
-    int k = -1;  // For drawing
-    int c;
-    if (rollNo) {
-        c = 10;
-    }
-    else {
-        c = 4;
-    }
+    //int k = -1;  // For drawing
+    // int c;
+    // if (rollNo) {
+    //     c = 10;
+    // }
+    // else {
+    //     c = 4;
+    // }
 
     vector<int> selectedIndices;
 
