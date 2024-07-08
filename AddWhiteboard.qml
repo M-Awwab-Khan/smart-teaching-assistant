@@ -63,8 +63,6 @@ Dialog {
                     name.focus = true;
                 } else if (event.key === Qt.Key_Down) {
                     folderButton.focus = true;
-                } else if (event.key === Qt.Key_Left) {
-                    name.focus = true;
                 }
             }
         }
