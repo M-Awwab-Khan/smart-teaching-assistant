@@ -3,8 +3,8 @@
 
 WhiteboardManager::WhiteboardManager(QObject *parent)
     : QObject(parent),
-    lowerColor(cv::Scalar(0, 114, 153)),
-    upperColor(cv::Scalar(22, 255, 255)),
+    lowerColor(cv::Scalar(0, 109, 153)),
+    upperColor(cv::Scalar(46, 255, 255)),
     currentColor(cv::Scalar(0, 0, 255)),
     redArea(cv::Rect(0, 0, 50, 50)),
     greenArea(cv::Rect(60, 0, 50, 50)),
@@ -34,6 +34,7 @@ void WhiteboardManager::processFrame(const QImage &frame)
 {
     cv::Mat matFrame(frame.height(), frame.width(), CV_8UC3, const_cast<uchar*>(frame.bits()), frame.bytesPerLine());
     cv::cvtColor(matFrame, matFrame, cv::COLOR_RGB2BGR);
+    cv::flip(matFrame, matFrame, 1);
 
     cv::Mat hsvFrame, mask;
     cv::cvtColor(matFrame, hsvFrame, cv::COLOR_BGR2HSV);

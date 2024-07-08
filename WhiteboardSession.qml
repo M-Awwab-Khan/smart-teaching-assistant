@@ -19,7 +19,7 @@ Item {
     Material.accent: "#6C63FF"
 
     Component.onCompleted: function () {
-        videoStreamer.startStream()
+        videoStreamer.startStream(0)
         focusArea.focus = true
     }
 

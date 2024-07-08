@@ -1,14 +1,14 @@
 #include "omrmanager.h"
-//# include "imutils.h"
+
 
 
 
 using namespace cv;
 using namespace std;
-//using namespace imutils;
+
 
 OMRmanager::OMRmanager(QObject *parent)
-    : QObject{parent}
+    : QObject{parent}   // Inherit with QObject to use signals
 {}
 
 
@@ -23,13 +23,13 @@ void OMRmanager::startOMR(const QVariant &imgVar, const bool firstPage, const QS
         qDebug() << img.height() << " " << img.width();
 
         cv::Mat mat(img.height(), img.width(), CV_8UC3, const_cast<uchar*>(img.bits()), img.bytesPerLine());
-         cv::rotate(mat, mat, cv::ROTATE_90_CLOCKWISE);
-        //cv::Mat temp = imread("C:/Users/DELL/Downloads/sample1.jpeg");
+        cv::rotate(mat, mat, cv::ROTATE_90_CLOCKWISE);
+        //cv::Mat temp = imread("C:/opencv/OpenCVCourse/Resources/Sample36(a).jpg");
         cv::Mat paper = detectPaper(mat);
 
         cv::Mat paperCopy = paper.clone(); // To display annotations
 
-        try {
+        try {  // If image is not correct
         if(firstPage) {
             this->rollNo = getRollNo(paper, paperCopy);
             cout << "ROll: " << this->rollNo << endl;
@@ -73,6 +73,9 @@ Mat OMRmanager::detectPaper(Mat& img) {
     GaussianBlur(imgEdge, imgEdge, Size(5, 5), 0); // Blur
     Canny(imgEdge, imgEdge, 75, 200); // Edge detection
 
+    // imshow("PaperEdge", imgEdge);
+    // waitKey(0);
+
     // Detecting rectangle
     vector<vector<Point>> contours; // For storing shapes
     vector<Vec4i> hierarchy;
@@ -83,13 +86,13 @@ Mat OMRmanager::detectPaper(Mat& img) {
     Rect boundRect; // Bounding rectangle
     bool found = false;
     for (int i = 0; i < contours.size(); i++) {
-        int area = contourArea(contours[i]);
+        int area = contourArea(contours[i]);  // area of shape
         if (area > 35000) {
             float peri = arcLength(contours[i], true);
             approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
-            int cor = (int)conPoly[i].size();
+            int cor = (int)conPoly[i].size();   // Corners
             if (cor >= 4) {
-                drawContours(newImg, contours, -1, cv::Scalar(0, 255, 0), 1);
+                //drawContours(newImg, contours, -1, cv::Scalar(0, 255, 0), 1);
                 boundRect = boundingRect(conPoly[i]);
                 found = true;
                 break;
@@ -112,7 +115,7 @@ Mat OMRmanager::detectPaper(Mat& img) {
         resize(newImg, newImg, Size(), 0.5, 0.5);
 
         cout << "Paper Successfully Deteced\n";
-        return newImg;
+        return newImg; //Image of paper
     }
     cout << "Paper unsuccessfully Deteced\n";
     return img; // if not found, returns the same image
@@ -431,6 +434,7 @@ QVariantMap OMRmanager::returnGrade()
     for(auto i: resultVector) {
         if(i == -1) {
             result["wrong"] = result["wrong"].toInt()+1;
+            qDebug() << "Qno = " << qNo + 1 << " ANs = " << ansKey[qNo];
         }
         else if(i == -2) {
             result["unattempted"] = result["unattempted"].toInt()+1;
@@ -441,6 +445,7 @@ QVariantMap OMRmanager::returnGrade()
             }
             else {
                 result["wrong"] = result["wrong"].toInt()+1;
+                qDebug() << "Qno = " << qNo + 1 << " ANs = " << ansKey[qNo];
             }
         }
         qNo += 1;
@@ -469,7 +474,8 @@ void OMRmanager::retry()
     qDebug() << "REtrying...";
     resultVector.clear();
     result.clear();
-    scannedImage = QImage();
+    scannedImage = QImage(200,200,QImage::Format_RGB32);
+    scannedImage.fill(QColor("black"));
     emit newScannedImage(scannedImage);
 
 }

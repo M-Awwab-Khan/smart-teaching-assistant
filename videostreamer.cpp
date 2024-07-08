@@ -12,8 +12,8 @@ VideoStreamer::~VideoStreamer()
     tUpdate.stop();
 }
 
-void VideoStreamer::startStream(){
-    cap.open(1);
+void VideoStreamer::startStream(int &camera){
+    cap.open(camera);
     double fps = cap.get(cv::CAP_PROP_FPS);
 
     tUpdate.start(1000/fps);

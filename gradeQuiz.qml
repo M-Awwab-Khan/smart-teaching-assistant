@@ -19,7 +19,7 @@ Item {
     signal imageCaptured(var img, bool firstPage, string ansKey, double negative_marking)
 
     Component.onCompleted: {
-        videoStreamerOMR.startStream()
+        videoStreamerOMR.startStream(1)
     }
 
     Component.onDestruction: {
@@ -113,6 +113,7 @@ Item {
                                 quizId, classId, result["rollNo"],
                                 result["correct"], result["wrong"],
                                 result["unattempted"], result["obtained"])
+                    console.log("Obtained marks", result["obtained"])
                     if (!response) {
                         console.log("Failed to upload quiz marks")
                     } else {
